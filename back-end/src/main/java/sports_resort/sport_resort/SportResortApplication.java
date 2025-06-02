@@ -1,4 +1,4 @@
-package sports_resort.sport_resort;
+ package sports_resort.sport_resort;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
