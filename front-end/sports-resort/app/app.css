@@ -15,9 +15,9 @@
 
     --radius-border: 16px;
 
-    --text-heading1: 3rem;
-    --text-heading2: 1.88rem;
-    --text-heading3: 1.25rem;
+    --text-heading1:  clamp(2.25rem, 5vw, 3rem);
+    --text-heading2: clamp(1.5rem, 4vw, 1.88rem);
+    --text-heading3: clamp(1.125rem, 2vw, 1.25rem);
     --text-base: 1rem;
     --text-small: 0.875rem;
     --text-xsmall: 0.75rem;
