@@ -22,8 +22,8 @@ function classNames(...classes:any[]) {
 
 export default function Example() {
     return (
-        <Disclosure as="nav" className="bg-[#F9F9F9]">
-            <div className="mx-auto px-2 sm:px-6 lg:px-16 py-3">
+        <Disclosure as="nav" className="bg-light-white">
+            <div className="mx-auto px-2 py-3 sm:px-6 max-w-width-container">
                 <div className="relative flex h-16 items-center justify-between">
                     <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                         {/* Mobile menu button*/}
@@ -50,8 +50,8 @@ export default function Example() {
                                         href={item.href}
                                         aria-current={item.current ? 'page' : undefined}
                                         className={classNames(
-                                            item.current ? 'bg-[#4767FF] text-white' : 'text-black hover:scale-110 hover:ease-in-out',
-                                            'rounded-md px-3 py-2 text-sm font-medium hover:scale-110 ease-in-out duration-200',
+                                            item.current ? 'bg-blue text-white' : 'text-black hover:scale-110 hover:ease-in-out',
+                                            'rounded-full px-3 py-2 text-small font-medium hover:scale-110 ease-in-out duration-200',
                                         )}
                                     >
                                         {item.name}
@@ -62,7 +62,7 @@ export default function Example() {
                         <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 ">
                             <Menu as="div" className="relative ml-3">
                                 <div>
-                                    <MenuButton className="relative flex rounded-full  text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#4767FF] focus:outline-hidden">
+                                    <MenuButton className="relative flex rounded-full  text-small focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue focus:outline-hidden">
                                         <span className="absolute -inset-1.5" />
                                         <span className="sr-only">Open user menu</span>
                                         <img
@@ -74,13 +74,13 @@ export default function Example() {
                                 </div>
                                 <MenuItems
                                     transition
-                                    className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                                    className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-light-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
                                 >
                                     {menu.map((item) => (
                                         <MenuItem key={item.name}>
                                             <a
                                                 href={item.href}
-                                                className="block px-4 py-2 text-sm text-black data-focus:bg-gray-100 data-focus:outline-hidden"
+                                                className="block px-4 py-2 text-small text-black data-focus:bg-gray-100 data-focus:outline-hidden"
                                             >
                                                 {item.name}
                                             </a>
@@ -103,8 +103,8 @@ export default function Example() {
                             href={item.href}
                             aria-current={item.current ? 'page' : undefined}
                             className={classNames(
-                                item.current ? 'bg-[#4767FF] text-white' : 'text-black',
-                                'block rounded-md px-3 py-2 text-base font-medium',
+                                item.current ? 'bg-blue text-white' : 'text-black',
+                                'block rounded-md px-3 py-2 text-small font-medium',
                             )}
                         >
                             {item.name}
