@@ -79,7 +79,7 @@ export default function Example() {
                                       </>
                                       :
                                       <>
-                                          <p>Bonjour, Guigui</p>
+                                          {/*<p>Bonjour, Guigui</p>*/}
                                           <MenuButton
                                             className="relative flex rounded-full  text-small focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue focus:outline-hidden">
                                               <span className="absolute -inset-1.5"/>
