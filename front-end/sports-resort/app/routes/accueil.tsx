@@ -17,7 +17,7 @@ export default function Accueil() {
     title: "Réserve ta séance en quelques clics",
     text: "Que tu sois amateur de sensations fortes ou en quête de bien-être, notre plateforme te permet de réserver " +
       "facilement tes séances dans les meilleures installations sportives autour de toi. " +
-      "Trouve ton sport, ton coach ou ton équipe, et reste en mouvement à ton rythme&nbsp;!",
+      "Trouve ton sport, ton coach ou ton équipe, et reste en mouvement à ton rythme!",
     button: "Trouve ta séance idéale",
     href: "/",
   }
