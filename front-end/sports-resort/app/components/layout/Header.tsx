@@ -1,12 +1,12 @@
 import { Link } from "react-router";
-
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Button from "../styles/Button";
+import { useLocation } from 'react-router'
 
 const navigation = [
     { name: 'Accueil', href: '/', current: true },
-    { name: 'Réservation', href: '/', current: false },
+    { name: 'Réservation', href: '/reservation', current: false },
     { name: 'Sports', href: '/sports', current: false },
     { name: 'Devenir coach', href: '/register', current: false, coach: true },
 ]
@@ -22,6 +22,8 @@ function classNames(...classes:any[]) {
 }
 
 export default function Example() {
+    let location = useLocation()
+
     return (
         <Disclosure as="nav" className="bg-light-white">
             <div className="mx-auto px-2 py-3 sm:px-6 max-w-width-container">
@@ -52,8 +54,8 @@ export default function Example() {
                                             to={item.href}
                                             state={item.coach}
                                             className={classNames(
-                                                item.current ? 'bg-blue text-white' : 'text-black hover:scale-110 hover:ease-in-out',
-                                                'rounded-full px-3 py-2 text-small font-medium hover:scale-110 ease-in-out duration-200',
+                                              location.pathname == item.href ? 'bg-blue text-white' : 'text-black hover:scale-110 hover:ease-in-out',
+                                              'rounded-full px-3 py-2 text-small font-medium hover:scale-110 ease-in-out duration-200',
                                             )}
                                             aria-current={item.current ? 'page' : undefined}>
                                             {item.name}
@@ -114,7 +116,7 @@ export default function Example() {
                             href={item.href}
                             aria-current={item.current ? 'page' : undefined}
                             className={classNames(
-                                item.current ? 'bg-blue text-white' : 'text-black',
+                              location.pathname == item.href ? 'bg-blue text-white' : 'text-black',
                                 'block rounded-md px-3 py-2 text-small font-medium',
                             )}
                         >
