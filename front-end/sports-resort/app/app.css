@@ -22,7 +22,6 @@
     --text-small: 0.875rem;
     --text-xsmall: 0.75rem;
 
-
 }
 
 html,
@@ -32,8 +31,4 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
 }

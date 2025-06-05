@@ -13,10 +13,19 @@ import { Pagination, Autoplay, Navigation } from 'swiper/modules';
 export default function Accueil() {
     const swiperRef = useRef<SwiperType>();
 
+  const dataHero = {
+    title: "Réserve ta séance en quelques clics",
+    text: "Que tu sois amateur de sensations fortes ou en quête de bien-être, notre plateforme te permet de réserver " +
+      "facilement tes séances dans les meilleures installations sportives autour de toi. " +
+      "Trouve ton sport, ton coach ou ton équipe, et reste en mouvement à ton rythme&nbsp;!",
+    button: "Trouve ta séance idéale",
+    href: "/",
+  }
+
   return(
       <>
           <Header />
-          <Hero />
+          <Hero title={dataHero.title} text={dataHero.text} button={dataHero.button} href={dataHero.href}/>
           <div className="py-12 px-2">
               <div className="text-black flex flex-col items-center gap-6">
                   <h2 className="text-heading2">Nos sports</h2>
