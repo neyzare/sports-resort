@@ -21,7 +21,12 @@
     --text-base: 1rem;
     --text-small: 0.875rem;
     --text-xsmall: 0.75rem;
+}
 
+.my-container {
+    max-width: var(--container-width-container);
+    margin-left: auto;
+    margin-right: auto;
 }
 
 html,

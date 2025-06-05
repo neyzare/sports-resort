@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Button from "../styles/Button";
 import { useLocation } from 'react-router'
 import {useState} from 'react'
@@ -13,7 +13,7 @@ const navigation = [
 ]
 
 const menu = [
-    { name: 'Profile', href: '/', current: true },
+    { name: 'Profile', href: '/profile', current: true },
     { name: 'Planning', href: '/', current: false },
     { name: 'Sign out', href: '/', current: false },
 ]
@@ -24,7 +24,7 @@ function classNames(...classes:any[]) {
 
 export default function Example() {
     let location = useLocation()
-    const [isLogged, setIsLogged] = useState(false)
+    const [isLogged, setIsLogged] = useState(true)
 
     return (
         <Disclosure as="nav" className="bg-light-white">
