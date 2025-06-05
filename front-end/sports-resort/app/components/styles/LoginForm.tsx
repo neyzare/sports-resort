@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import Button from "./Button";
 
 export default function LoginForm() {
   return (
@@ -25,9 +26,9 @@ export default function LoginForm() {
             </a>
           </div>
           <div className="flex flex-col gap-y-2 items-center justify-between">
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline" type="button">
-              <p className="text-xs uppercase">Se connecter</p>
-            </button>
+            <Button name="Se connecter"
+              className="text-white text-xs"
+              href="/"/>
             {/* TODO - Ajouter le state dans la navbar principal */}
             <Link to="/register" state={{ coach: true }} className="inline-block align-baseline font-bold text-xsmall text-light-text hover:text-blue underline">
               inscription

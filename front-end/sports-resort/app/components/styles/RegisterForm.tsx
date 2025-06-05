@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import Button from "./Button";
 
 type RegisterFormProps = {
   coach: boolean;
@@ -119,10 +120,10 @@ export default function RegisterForm({ coach }: RegisterFormProps) {
           </div>
 
           <div className="flex flex-col gap-y-2 items-center justify-between">
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline" type="button">
-              <p className="text-xs uppercase">Se connecter</p>
-            </button>
-            <Link className="inline-block align-baseline font-bold text-xs text-light-text hover:text-blue underline" to="/login">
+            <Button name="S'inscrire"
+              className="text-white text-xs"
+              href="/"/>
+            <Link to="/login" className="inline-block align-baseline font-bold text-xs text-light-text hover:text-blue underline">
               connexion
             </Link>
           </div>
