@@ -68,7 +68,7 @@ export default function Example() {
                         <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 ">
                             <Menu as="div" className="relative ml-3">
                                 <div className="flex items-center gap-x-4">
-                                    {isLogged == false ?
+                                    {!isLogged ?
                                       <>
                                           <Button name="Inscription"
                                                   className="text-white text-xs hover:text-blue-secondary bg-blue-secondary border-blue-secondary hidden md:block"
@@ -132,7 +132,7 @@ export default function Example() {
                             {item.name}
                         </DisclosureButton>
                     ))}
-                    {isLogged == false ?
+                    {!isLogged ?
                       <div className="flex justify-center">
                           <Button name="Inscription"
                                   className="text-white text-xs hover:text-blue-secondary bg-blue-secondary border-blue-secondary"
@@ -143,7 +143,6 @@ export default function Example() {
                       </div>
                     :
                       <>
-                          oui
                       </>
                     }
                 </div>

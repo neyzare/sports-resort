@@ -1,8 +1,5 @@
 import Footer from "~/components/layout/Footer";
 import Header from "~/components/layout/Header";
-import Button from "~/components/styles/Button";
-import Hero from "~/components/styles/Hero";
-import tennis from "medias/images/tennis.webp"
 
 export default function Sport () {
   return (
