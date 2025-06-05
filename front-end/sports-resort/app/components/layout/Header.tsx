@@ -7,7 +7,7 @@ import Button from "../styles/Button";
 const navigation = [
     { name: 'Accueil', href: '/', current: true },
     { name: 'Réservation', href: '/', current: false },
-    { name: 'Sports', href: '/', current: false },
+    { name: 'Sports', href: '/sports', current: false },
     { name: 'Devenir coach', href: '/register', current: false, coach: true },
 ]
 
@@ -47,7 +47,7 @@ export default function Example() {
                             <div className="flex space-x-4">
                                 {navigation.map((item) => (
                                     <>
-                                        <Link 
+                                        <Link
                                             key={item.name}
                                             to={item.href}
                                             state={item.coach}
