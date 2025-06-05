@@ -2,12 +2,13 @@ import { Link } from "react-router";
 
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import Button from "../styles/Button";
 
 const navigation = [
     { name: 'Accueil', href: '/', current: true },
     { name: 'Réservation', href: '/', current: false },
-    { name: 'Sports', href: '/sports', current: false },
-    { name: 'Devenir coach', href: '/', current: false },
+    { name: 'Sports', href: '/', current: false },
+    { name: 'Devenir coach', href: '/register', current: false, coach: true },
 ]
 
 const menu = [
@@ -45,23 +46,33 @@ export default function Example() {
                         <div className="hidden sm:ml-6 sm:block my-auto">
                             <div className="flex space-x-4">
                                 {navigation.map((item) => (
-                                    <a
-                                        key={item.name}
-                                        href={item.href}
-                                        aria-current={item.current ? 'page' : undefined}
-                                        className={classNames(
-                                            item.current ? 'bg-blue text-white' : 'text-black hover:scale-110 hover:ease-in-out',
-                                            'rounded-full px-3 py-2 text-small font-medium hover:scale-110 ease-in-out duration-200',
-                                        )}
-                                    >
-                                        {item.name}
-                                    </a>
+                                    <>
+                                        <Link
+                                            key={item.name}
+                                            to={item.href}
+                                            state={item.coach}
+                                            className={classNames(
+                                                item.current ? 'bg-blue text-white' : 'text-black hover:scale-110 hover:ease-in-out',
+                                                'rounded-full px-3 py-2 text-small font-medium hover:scale-110 ease-in-out duration-200',
+                                            )}
+                                            aria-current={item.current ? 'page' : undefined}>
+                                            {item.name}
+                                        </Link>
+                                    </>
                                 ))}
                             </div>
                         </div>
                         <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 ">
                             <Menu as="div" className="relative ml-3">
-                                <div>
+                                <div className="flex items-center gap-x-4">
+                                    {/* TODO - Affichage conditionnel si le user est connecté */}
+                                    <Button name="Inscription"
+                                        className="text-white text-xs hover:text-blue-secondary bg-blue-secondary border-blue-secondary"
+                                        href="/register"/>
+                                    <Button name="Connexion"
+                                        className="text-white text-xs"
+                                        href="/login"/>
+                                    <p>Bonjour, Guigui</p>
                                     <MenuButton className="relative flex rounded-full  text-small focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue focus:outline-hidden">
                                         <span className="absolute -inset-1.5" />
                                         <span className="sr-only">Open user menu</span>
