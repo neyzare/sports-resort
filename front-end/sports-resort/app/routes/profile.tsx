@@ -11,7 +11,7 @@ export default function Sport () {
           <img
             alt=""
             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-            className="size-40 rounded-full"
+            className="size-40 md:size-26 rounded-full"
           />
           <div className="text-center text-base space-y-2 md:text-start">
             <p>Matéo Grange</p>

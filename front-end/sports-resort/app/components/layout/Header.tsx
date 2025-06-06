@@ -7,7 +7,7 @@ import {useState} from 'react'
 
 const navigation = [
     { name: 'Accueil', href: '/', current: true },
-    { name: 'Réservation', href: '/reservation', current: false },
+    { name: 'Réservations', href: '/reservations', current: false },
     { name: 'Sports', href: '/sports', current: false },
     { name: 'Devenir coach', href: '/register', current: false, coach: true },
 ]
@@ -20,7 +20,7 @@ const menu = [
 
 function classNames(...classes:any[]) {
     return classes.filter(Boolean).join(' ')
-}
+
 
 export default function Example() {
     let location = useLocation()
