@@ -1,19 +1,19 @@
 import { Link } from "react-router";
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Button from "../styles/Button";
 import { useLocation } from 'react-router'
 import {useState} from 'react'
 
 const navigation = [
     { name: 'Accueil', href: '/', current: true },
-    { name: 'Réservation', href: '/reservation', current: false },
+    { name: 'Réservations', href: '/reservations', current: false },
     { name: 'Sports', href: '/sports', current: false },
     { name: 'Devenir coach', href: '/register', current: false, coach: true },
 ]
 
 const menu = [
-    { name: 'Profile', href: '/', current: true },
+    { name: 'Profile', href: '/profile', current: true },
     { name: 'Planning', href: '/', current: false },
     { name: 'Sign out', href: '/', current: false },
 ]
@@ -24,7 +24,7 @@ function classNames(...classes:any[]) {
 
 export default function Example() {
     let location = useLocation()
-    const [isLogged, setIsLogged] = useState(false)
+    const [isLogged, setIsLogged] = useState(true)
 
     return (
         <Disclosure as="nav" className="bg-light-white">
@@ -68,7 +68,7 @@ export default function Example() {
                         <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 ">
                             <Menu as="div" className="relative ml-3">
                                 <div className="flex items-center gap-x-4">
-                                    {isLogged == false ?
+                                    {!isLogged ?
                                       <>
                                           <Button name="Inscription"
                                                   className="text-white text-xs hover:text-blue-secondary bg-blue-secondary border-blue-secondary hidden md:block"
@@ -132,7 +132,7 @@ export default function Example() {
                             {item.name}
                         </DisclosureButton>
                     ))}
-                    {isLogged == false ?
+                    {!isLogged ?
                       <div className="flex justify-center">
                           <Button name="Inscription"
                                   className="text-white text-xs hover:text-blue-secondary bg-blue-secondary border-blue-secondary"
@@ -143,7 +143,6 @@ export default function Example() {
                       </div>
                     :
                       <>
-                          oui
                       </>
                     }
                 </div>

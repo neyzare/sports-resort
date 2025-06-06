@@ -11,7 +11,7 @@ import { ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/24/solid'
 import { Pagination, Autoplay, Navigation } from 'swiper/modules';
 
 export default function Accueil() {
-    const swiperRef = useRef<SwiperType>();
+  const swiperRef = useRef()
 
   const dataHero = {
     title: "Réserve ta séance en quelques clics",
@@ -91,10 +91,10 @@ export default function Accueil() {
             </Swiper>
             <div className="pt-8 pr-6 space-x-4 lg:hidden flex justify-end">
               <button className="h-8 w-8 p-1 bg-blue rounded-full lg:hidden" onClick={() => swiperRef.current?.slidePrev()}>
-                <ChevronLeftIcon aria-hidden="true"/>
+                <ChevronLeftIcon aria-hidden="true" className="stroke-white fill-white"/>
               </button>
               <button className="h-8 w-8 p-1 bg-blue rounded-full lg:hidden" onClick={() => swiperRef.current?.slideNext()}>
-                <ChevronRightIcon aria-hidden="true"/>
+                <ChevronRightIcon aria-hidden="true" className="stroke-white fill-white"/>
               </button>
             </div>
           </div>
