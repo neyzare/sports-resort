@@ -20,7 +20,7 @@ const menu = [
 
 function classNames(...classes:any[]) {
     return classes.filter(Boolean).join(' ')
-
+}
 
 export default function Example() {
     let location = useLocation()
