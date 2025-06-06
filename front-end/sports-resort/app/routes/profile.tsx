@@ -7,18 +7,32 @@ export default function Sport () {
     <>
       <Header/>
       <div className=" w-full px-2 sm:px-6 my-container w-full px-2 sm:px-6 my-container" >
-        <div className="bg-light-white rounded-border flex flex-col justify-center items-center my-8 p-4 gap-4 md:gap-12 md:flex-row md:justify-start md:pl-40">
-          <img
-            alt=""
-            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-            className="size-40 md:size-26 rounded-full"
-          />
-          <div className="text-center text-base space-y-2 md:text-start">
-            <p>Matéo Grange</p>
-            <p>France</p>
-            <p>admin</p>
+        <div className="flex flex-col md:flex-row items-center justify-around bg-light-white rounded-border my-8">
+          <div
+            className="rounded-border flex flex-col justify-center items-center p-4 gap-4 md:gap-12 md:flex-row md:justify-start ">
+            <img
+              alt=""
+              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              className="size-40 md:size-26 rounded-full"
+            />
+            <div className="text-center text-base space-y-2 md:text-start">
+              <p>Matéo Grange</p>
+              <p>France</p>
+              <p>admin</p>
+            </div>
+          </div>
+          <div className="flex flex-col items-center md:flex-row">
+            <Button name="modifier mes infos"
+                    className="w-fit"
+                    href="/"
+            />
+            <Button name="supprimer mon compte"
+                    className="border-red bg-red hover:text-red"
+                    href="/"
+            />
           </div>
         </div>
+
         <div className="bg-light-white rounded-border flex flex-col gap-4 p-4 my-8">
           <h3 className="text-heading3 ml-12">Infos perso</h3>
           <hr className="border-border w-full"/>
@@ -73,16 +87,6 @@ export default function Sport () {
               <p>45000</p>
             </div>
           </div>
-        </div>
-        <div className="bg-light-white rounded-border flex flex-col items-center md:flex-row justify-center gap-4 p-4 my-8">
-          <Button name="modifier mes infos"
-                  className="w-fit"
-                  href="/"
-          />
-          <Button name="supprimer mon compte"
-          className="border-red bg-red hover:text-red"
-          href="/"
-          />
         </div>
       </div>
       <Footer/>
