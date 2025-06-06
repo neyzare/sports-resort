@@ -26,7 +26,7 @@ export default function Accueil() {
     <>
       <Header />
       <Hero title={dataHero.title} text={dataHero.text} button={dataHero.button} href={dataHero.href}/>
-      <div className="py-12 px-2">
+      <div className="py-12 px-2 w-full my-container">
         <div className="text-black flex flex-col items-center gap-6">
           <h2 className="text-heading2">Nos sports</h2>
           <h3 className="text-heading3 text-center">Une offre variée pour tous les goûts et tous les niveaux</h3>

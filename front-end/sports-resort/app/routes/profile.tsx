@@ -6,7 +6,7 @@ export default function Sport () {
   return (
     <>
       <Header/>
-      <div className=" w-full px-2 sm:px-6 my-container" >
+      <div className=" w-full px-2 sm:px-6 my-container w-full px-2 sm:px-6 my-container" >
         <div className="bg-light-white rounded-border flex flex-col justify-center items-center my-8 p-4 gap-4 md:gap-12 md:flex-row md:justify-start md:pl-40">
           <img
             alt=""

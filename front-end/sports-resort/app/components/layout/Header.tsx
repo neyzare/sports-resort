@@ -28,7 +28,7 @@ export default function Example() {
 
     return (
         <Disclosure as="nav" className="bg-light-white">
-            <div className="mx-auto px-2 py-3 sm:px-6 max-w-width-container">
+            <div className="mx-auto py-3 px-2 w-full my-container">
                 <div className="relative flex h-16 items-center justify-between">
                     <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                         <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset">
