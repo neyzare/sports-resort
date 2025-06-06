@@ -77,7 +77,7 @@ export default function LoginForm() {
           <input type="submit"
                  className="bg-blue border-blue hover:text-blue text-xs text-white border-2 rounded-full px-6 py-2 w-fit hover:bg-transparent duration-200 ease-in-out uppercase font-bold m-1"/>
 
-          <Link to="/register" state={{coach: true}}
+          <Link to="/register"
                 className="inline-block align-baseline font-bold text-xsmall text-light-text hover:text-blue underline">
             inscription
           </Link>

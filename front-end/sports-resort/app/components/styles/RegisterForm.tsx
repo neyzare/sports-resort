@@ -4,11 +4,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { ErrorMessage } from "@hookform/error-message";
 
-type RegisterFormProps = {
-  coach: boolean;
-};
-
-export default function RegisterForm({ coach }: RegisterFormProps) {
+export default function RegisterForm() {
   const {
     register,
     formState: { errors },
@@ -277,7 +273,7 @@ export default function RegisterForm({ coach }: RegisterFormProps) {
             </div>
           </div>
 
-          <div className="mb-6">
+          <div className="mb-4 flex gap-x-4">
             <div className="flex gap-x-4">
               <div className="flex-grow">
                 <label className="block text-gray-700 text-xsmall font-bold mb-2" htmlFor="password">
@@ -333,7 +329,9 @@ export default function RegisterForm({ coach }: RegisterFormProps) {
                 />
               </div>
             </div>
+          </div>
 
+          <div className="mb-4 gap-x-4">
             <div className="mb-6">
               <div className="flex gap-x-4">
                 <div className="flex-grow">
@@ -343,7 +341,7 @@ export default function RegisterForm({ coach }: RegisterFormProps) {
                   <div className="flex flex-row gap-8">
                     <label>
                       <div className="flex gap-1">
-                        <input {...register("coach")} type="radio" value="Yes"/>
+                        <input {...register("coach")} type="checkbox" value="Yes"/>
                         oui
                       </div>
                     </label>
@@ -363,8 +361,6 @@ export default function RegisterForm({ coach }: RegisterFormProps) {
                 </div>
               </div>
             </div>
-
-            {/* Attention si c'est un coach */}
             {coachType ? (
               <div className="flex gap-x-4">
                 <div className="flex-grow">
@@ -401,7 +397,6 @@ export default function RegisterForm({ coach }: RegisterFormProps) {
                 </div>
               </div>
             ) : (<div></div>)}
-
           </div>
 
           <div className="flex flex-col gap-y-2 items-center justify-between">
