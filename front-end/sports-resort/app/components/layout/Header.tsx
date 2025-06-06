@@ -24,7 +24,7 @@ function classNames(...classes:any[]) {
 
 export default function Example() {
     let location = useLocation()
-    const [isLogged, setIsLogged] = useState(true)
+    const [isLogged, setIsLogged] = useState(false)
 
     return (
         <Disclosure as="nav" className="bg-light-white">
