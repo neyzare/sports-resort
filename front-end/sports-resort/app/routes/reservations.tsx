@@ -1,20 +1,37 @@
 import { useState } from "react";
 import Header from "~/components/layout/Header";
+import { fr } from "react-day-picker/locale";
 
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
+import ReservationPopUp from "~/components/styles/ReservationPopUp";
 
 export default function Reservations() {
-    const today = new Date();
-    const options: Intl.DateTimeFormatOptions = {
+    const [selected, setSelected] = useState<Date>(() => new Date());
+
+    const formattedDate =
+    selected?.toLocaleDateString('fr-FR', {
         weekday: 'long',
         day: 'numeric',
         month: 'long',
         year: 'numeric',
-    };
-    const formattedDate = today.toLocaleDateString('fr-FR', options);
+    }) ?? 'Sélectionnez une date';
 
-    const [selected, setSelected] = useState<Date>();
+    const goToPreviousDay = () => {
+        setSelected((prev) => {
+            const date = new Date(prev);
+            date.setDate(date.getDate() - 1);
+            return date;
+        });
+    };
+
+    const goToNextDay = () => {
+        setSelected((prev) => {
+            const date = new Date(prev);
+            date.setDate(date.getDate() + 1);
+            return date;
+        });
+    };
 
     return (
         <>
@@ -42,13 +59,16 @@ export default function Reservations() {
                         <h3 className="text-center font-bold uppercase py-3">calendrier</h3>
                         <div className="bg-light-white rounded-border px-4 py-6 border border-border">
                             <DayPicker
+                                locale={fr}
                                 animate
                                 mode="single"
                                 selected={selected}
                                 onSelect={setSelected}
-                                // footer={
-                                //     selected ? `Selected: ${selected.toLocaleDateString()}` : "Pick a day."
-                                // }
+                                classNames={{
+                                    today: `stroke-blue`,
+                                    chevron: `fill-blue`,
+                                    selected: 'bg-blue text-white rounded-full',
+                                }}
                             />
                         </div>
                     </div>
@@ -58,13 +78,17 @@ export default function Reservations() {
                 </div>
                 <div className="flex-grow">
                     <div className="flex gap-2 py-3 justify-center items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" className="size-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-                        </svg>
+                        <a onClick={goToPreviousDay}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" className="size-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                            </svg>
+                        </a>
                         <p className="font-bold uppercase">{formattedDate}</p>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" className="size-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                        </svg>
+                        <a onClick={goToNextDay}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" className="size-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                            </svg>
+                        </a>
                     </div>
                     <div className="bg-light-white rounded-border px-8 py-6 border border-border flex gap-4">
                         <div className="w-fit pt-6">
@@ -80,25 +104,7 @@ export default function Reservations() {
                                 <h3 className="mb-3 font-bold uppercase">Court I</h3>
                                 {Array.from({ length: 12 }).map((_, index) => (
                                     <>
-                                        <a
-                                        key={index}
-                                        href=""
-                                        className="w-full border-blue text-blue hover:text-white hover:bg-blue border-2 rounded-border px-6 py-2 duration-200 ease-in-out uppercase font-bold m-1"
-                                        >
-                                            Réserver
-                                        </a>
-                                        {/* <a
-                                        key={index}
-                                        className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
-                                        >
-                                            occuper
-                                        </a>
-                                        <a
-                                        key={index}
-                                        className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
-                                        >
-                                            🎾 Coach
-                                        </a> */}
+                                        <ReservationPopUp index={index} type="occuper"/>
                                     </>
                                 ))}
                             </div>
@@ -106,53 +112,30 @@ export default function Reservations() {
                                 <h3 className="mb-3 font-bold uppercase">Court II</h3>
                                 {Array.from({ length: 12 }).map((_, index) => (
                                     <>
-                                        <a
-                                        key={index}
-                                        href=""
-                                        className="w-full border-blue text-blue hover:text-white hover:bg-blue border-2 rounded-border px-6 py-2 duration-200 ease-in-out uppercase font-bold m-1"
-                                        >
-                                            Réserver
-                                        </a>
-                                        {/* <a
-                                        key={index}
-                                        className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
-                                        >
-                                            occuper
-                                        </a>
-                                        <a
-                                        key={index}
-                                        className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
-                                        >
-                                            🎾 Coach
-                                        </a> */}
+                                        <ReservationPopUp index={index}/>
                                     </>
                                 ))}
                             </div>
                             <div className="flex flex-col text-center flex-grow">
                                 <h3 className="mb-3 font-bold uppercase">Court III</h3>
-                                {Array.from({ length: 12 }).map((_, index) => (
+                                <ReservationPopUp type="coach"/>
+                                <ReservationPopUp type="coach"/>
+                                <ReservationPopUp type="coach"/>
+                                <ReservationPopUp type="coach"/>
+                                <ReservationPopUp type="coach"/>
+                                <ReservationPopUp type="coach"/>
+                                <ReservationPopUp type="coach"/>
+                                <ReservationPopUp type="coach"/>
+                                <ReservationPopUp/>
+                                <ReservationPopUp type="coach"/>
+                                <ReservationPopUp type="coach"/>
+                                <ReservationPopUp/>
+
+                                {/* {Array.from({ length: 12 }).map((_, index) => (
                                     <>
-                                        <a
-                                        key={index}
-                                        href=""
-                                        className="w-full border-blue text-blue hover:text-white hover:bg-blue border-2 rounded-border px-6 py-2 duration-200 ease-in-out uppercase font-bold m-1"
-                                        >
-                                            Réserver
-                                        </a>
-                                        {/* <a
-                                        key={index}
-                                        className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
-                                        >
-                                            occuper
-                                        </a>
-                                        <a
-                                        key={index}
-                                        className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
-                                        >
-                                            🎾 Coach
-                                        </a> */}
+                                        <ReservationPopUp type="coach" index={index}/>
                                     </>
-                                ))}
+                                ))} */}
                             </div>
                             <div className="flex flex-col text-center flex-grow">
                                 <h3 className="mb-3 font-bold uppercase">Court IV</h3>
