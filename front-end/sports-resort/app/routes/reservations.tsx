@@ -7,10 +7,11 @@ import "react-day-picker/style.css";
 import ReservationPopUp from "~/components/styles/ReservationPopUp";
 
 export default function Reservations() {
+
+    // Selection de la date dans la page
     const [selected, setSelected] = useState<Date>(() => new Date());
 
-    const formattedDate =
-    selected?.toLocaleDateString('fr-FR', {
+    const formattedDate = selected?.toLocaleDateString('fr-FR', {
         weekday: 'long',
         day: 'numeric',
         month: 'long',
@@ -32,6 +33,32 @@ export default function Reservations() {
             return date;
         });
     };
+
+    // Attention à supprimer et mettre dans les cookies ou localStorage
+    const [compte, setCompte] = useState("user");
+
+    const [court1, setCourt1] = useState([
+        {
+        "startTime": "08:00",
+        "endTime": "09:00",
+        "type": "occuper"
+        },
+        {
+        "startTime": "12:00",
+        "endTime": "13:00",
+        "type": "resaCoach"
+        }
+    ]);
+    const [court2, setCourt2] = useState([]);
+    const [court3, setCourt3] = useState([]);
+    const [court4, setCourt4] = useState([]);
+
+    const timeSlots = Array.from({ length: 12 }, (_, index) => {
+        const hour = index + 8;
+        return `${hour.toString().padStart(2, "0")}:00`;
+    });
+
+
 
     return (
         <>
@@ -102,66 +129,85 @@ export default function Reservations() {
                         <div className="flex flex-grow gap-4">
                             <div className="flex flex-col text-center flex-grow">
                                 <h3 className="mb-3 font-bold uppercase">Court I</h3>
-                                {Array.from({ length: 12 }).map((_, index) => (
-                                    <>
-                                        <ReservationPopUp index={index} type="occuper"/>
-                                    </>
-                                ))}
+
+
+                                {timeSlots.map((slot, index) => {
+                                    const reservation = court1.find(r => r.startTime === slot);
+
+                                    if (reservation) {
+                                        return (
+                                        <ReservationPopUp
+                                            key={index}
+                                            index={index}
+                                            type={reservation.type}
+                                        />
+                                        );
+                                    } else {
+                                        return (
+                                        <ReservationPopUp index={index}/>
+                                        );
+                                    }
+                                })}
                             </div>
                             <div className="flex flex-col text-center flex-grow">
                                 <h3 className="mb-3 font-bold uppercase">Court II</h3>
-                                {Array.from({ length: 12 }).map((_, index) => (
-                                    <>
+                                {timeSlots.map((slot, index) => {
+                                    const reservation = court2.find(r => r.startTime === slot);
+
+                                    if (reservation) {
+                                        return (
+                                        <ReservationPopUp
+                                            key={index}
+                                            index={index}
+                                            type={reservation.type}
+                                        />
+                                        );
+                                    } else {
+                                        return (
                                         <ReservationPopUp index={index}/>
-                                    </>
-                                ))}
+                                        );
+                                    }
+                                })}
                             </div>
                             <div className="flex flex-col text-center flex-grow">
                                 <h3 className="mb-3 font-bold uppercase">Court III</h3>
-                                <ReservationPopUp type="coach"/>
-                                <ReservationPopUp type="coach"/>
-                                <ReservationPopUp type="coach"/>
-                                <ReservationPopUp type="coach"/>
-                                <ReservationPopUp type="coach"/>
-                                <ReservationPopUp type="coach"/>
-                                <ReservationPopUp type="coach"/>
-                                <ReservationPopUp type="coach"/>
-                                <ReservationPopUp/>
-                                <ReservationPopUp type="coach"/>
-                                <ReservationPopUp type="coach"/>
-                                <ReservationPopUp/>
+                                {timeSlots.map((slot, index) => {
+                                    const reservation = court3.find(r => r.startTime === slot);
 
-                                {/* {Array.from({ length: 12 }).map((_, index) => (
-                                    <>
-                                        <ReservationPopUp type="coach" index={index}/>
-                                    </>
-                                ))} */}
+                                    if (reservation) {
+                                        return (
+                                        <ReservationPopUp
+                                            key={index}
+                                            index={index}
+                                            type={reservation.type}
+                                        />
+                                        );
+                                    } else {
+                                        return (
+                                        <ReservationPopUp index={index}/>
+                                        );
+                                    }
+                                })}
                             </div>
                             <div className="flex flex-col text-center flex-grow">
                                 <h3 className="mb-3 font-bold uppercase">Court IV</h3>
-                                {Array.from({ length: 12 }).map((_, index) => (
-                                    <>
-                                        <a
-                                        key={index}
-                                        href=""
-                                        className="w-full border-blue text-blue hover:text-white hover:bg-blue border-2 rounded-border px-6 py-2 duration-200 ease-in-out uppercase font-bold m-1"
-                                        >
-                                            Réserver
-                                        </a>
-                                        {/* <a
-                                        key={index}
-                                        className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
-                                        >
-                                            occuper
-                                        </a>
-                                        <a
-                                        key={index}
-                                        className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
-                                        >
-                                            🎾 Coach
-                                        </a> */}
-                                    </>
-                                ))}
+                                {timeSlots.map((slot, index) => {
+                                    const reservation = court4.find(r => r.startTime === slot);
+
+                                    if (reservation) {
+                                        return (
+                                        <ReservationPopUp
+                                            key={index}
+                                            index={index}
+                                            type={reservation.type}
+                                        />
+                                        );
+                                    } else {
+                                        return (
+                                        <ReservationPopUp index={index}/>
+                                        );
+                                    }
+                                })}
                             </div>
                         </div>
                     </div>
