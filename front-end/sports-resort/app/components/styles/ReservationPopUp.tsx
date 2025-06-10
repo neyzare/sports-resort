@@ -4,22 +4,55 @@ import { useState } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
-export default function ReservationPopUp({ compte, type, index, date, heure }: { compte: string, type: string, index: number, date: Date, heure: Date }) {
+export default function ReservationPopUp({ type, index, date, heure }: { type: string, index: number, date: Date, heure: Date }) {
   const [open, setOpen] = useState(false);
+
+  // Attention à supprimer et mettre dans les cookies ou localStorage
+  const [compte, setCompte] = useState("user");
 
   return (
     <div>
-      {type === "coach" && ( 
+      {/* Affichage des cards admin */}
+      {compte === "admin" && type == null && ( 
+        <button
+          key={index}
+          className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
+        >
+          Disponible
+        </button>
+      )}
+      {compte === "admin" && type == "adminUser" && (
         <button
           key={index}
           onClick={() => setOpen(true)}
           className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-70 hover:opacity-100 duration-200 ease-in-out"
         >
+          {/* Data à changer */}
+          🎾 User
+        </button>
+      )}
+      {compte === "admin" && type == "adminCoach" && (
+        <button
+          key={index}
+          onClick={() => setOpen(true)}
+          className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-70 hover:opacity-100 duration-200 ease-in-out"
+        >
+          {/* Data à changer */}
           🎾 Coach
         </button>
       )}
+      {/* {compte === "admin" && type == "adminCollectif" && (
+        <button
+          key={index}
+          onClick={() => setOpen(true)}
+          className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-70 hover:opacity-100 duration-200 ease-in-out"
+        >
+          🎾 Court collectif
+        </button>
+      )} */}
 
-      {type === "occuper" && ( 
+      {/* Affichage des cards occuper */}
+      {(compte === "coach" || compte === "user") && type === "occuper" && ( 
         <button
           key={index}
           className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
@@ -28,13 +61,45 @@ export default function ReservationPopUp({ compte, type, index, date, heure }: {
         </button>
       )}
 
-      {type == null && ( 
+      {/* Affichage des cards pour réserver */}
+      {(compte === "coach" || compte === "user") && type == null && ( 
         <button
           key={index}
           onClick={() => setOpen(true)}
           className="w-full border-blue text-blue hover:text-white hover:bg-blue border-2 rounded-border px-6 py-2 duration-200 ease-in-out uppercase font-bold m-1"
         >
           Réserver
+        </button>
+      )}
+
+      {/* Affichage des cards pour réservation solo de user ou coach */}
+      {type === "resaSolo" && ( 
+        <button
+          key={index}
+          onClick={() => setOpen(true)}
+          className=" w-full border-blue bg-blue text-white border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-70 hover:opacity-100 duration-200 ease-in-out"
+        >
+          🎾 Moi
+        </button>
+      )}
+
+      {/* Affichage des cards pour réservation avec un coach */}
+      {compte === "user" && type === "resaCoach" && ( 
+        <button
+          key={index}
+          onClick={() => setOpen(true)}
+          className=" w-full border-blue-secondary bg-blue-secondary text-white border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-70 hover:opacity-100 duration-200 ease-in-out"
+        >
+          🎾 Coach
+        </button>
+      )}
+      {compte === "coach" && type === "resaCoach" && ( 
+        <button
+          key={index}
+          onClick={() => setOpen(true)}
+          className=" w-full border-blue-secondary bg-blue-secondary text-white border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-70 hover:opacity-100 duration-200 ease-in-out"
+        >
+          🎾 User
         </button>
       )}
 
