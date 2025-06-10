@@ -9,7 +9,7 @@ const navigation = [
     { name: 'Accueil', href: '/', current: true },
     { name: 'Réservations', href: '/reservations', current: false },
     { name: 'Sports', href: '/sports', current: false },
-    { name: 'Devenir coach', href: '/register', current: false, coach: true },
+    { name: 'Devenir coach', href: '/register', current: false},
 ]
 
 const menu = [
@@ -24,7 +24,7 @@ function classNames(...classes:any[]) {
 
 export default function Example() {
     let location = useLocation()
-    const [isLogged, setIsLogged] = useState(true)
+    const [isLogged, setIsLogged] = useState(false)
 
     return (
         <Disclosure as="nav" className="bg-light-white">
@@ -53,7 +53,6 @@ export default function Example() {
                                         <Link
                                             key={item.name}
                                             to={item.href}
-                                            state={item.coach}
                                             className={classNames(
                                               location.pathname == item.href ? 'bg-blue text-white' : 'text-black hover:scale-110 hover:ease-in-out',
                                               'rounded-full px-3 py-2 text-small font-medium hover:scale-110 ease-in-out duration-200',
