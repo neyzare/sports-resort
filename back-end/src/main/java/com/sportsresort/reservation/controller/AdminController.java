@@ -27,6 +27,22 @@ public class AdminController {
         return userRepository.findAll();
     }
 
+    @PostMapping("/users")
+    public User addUSer(@RequestBody User user) {
+        return userRepository.save(user);
+    }
+
+    @PutMapping("/users/{id}")
+    public User updateUser(@PathVariable Long id, @RequestBody User updated) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.setFirstname(updated.getFirstname());
+        user.setLastname(updated.getLastname());
+        user.setEmail(updated.getEmail());
+        user.setAddress(updated.getAddress());
+        user.setPassword(updated.getPassword());
+        return userRepository.save(user);
+    }
+
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable Long id) {
         userRepository.deleteById(id);
@@ -52,19 +68,16 @@ public class AdminController {
         creneauRepository.deleteById(id);
     }
 
-    // Liste tous les sports
     @GetMapping("/sports")
     public List<Sport> getAllSports() {
         return sportRepository.findAll();
     }
 
-    // Ajoute un sport
     @PostMapping("/sports")
     public Sport addSport(@RequestBody Sport sport) {
         return sportRepository.save(sport);
     }
 
-    // Met à jour un sport
     @PutMapping("/sports/{id}")
     public Sport updateSport(@PathVariable Long id, @RequestBody Sport updated) {
         Sport sport = sportRepository.findById(id).orElseThrow();
@@ -76,7 +89,6 @@ public class AdminController {
         return sportRepository.save(sport);
     }
 
-    // Supprime un sport
     @DeleteMapping("/sports/{id}")
     public void deleteSport(@PathVariable Long id) {
         sportRepository.deleteById(id);
