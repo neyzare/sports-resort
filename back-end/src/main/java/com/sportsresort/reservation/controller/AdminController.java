@@ -9,7 +9,6 @@ import com.sportsresort.reservation.repository.SportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import com.sportsresort.reservation.repository.SportRepository;
 import java.util.List;
 
 @RestController
@@ -19,6 +18,9 @@ import java.util.List;
 public class AdminController {
 
     private final SportRepository sportRepository;
+    private final UserRepository userRepository;
+    private final CreneauRepository creneauRepository;
+
 
     @GetMapping("/users")
     public List<User> getAllUsers() {
@@ -30,8 +32,6 @@ public class AdminController {
         userRepository.deleteById(id);
     }
 
-    // ----- Créneaux -----
-
     @PostMapping("/creneaux")
     public Creneau addCreneau(@RequestBody Creneau creneau) {
         return creneauRepository.save(creneau);
@@ -42,7 +42,7 @@ public class AdminController {
         Creneau creneau = creneauRepository.findById(id).orElseThrow();
         creneau.setStartTime(updated.getStartTime());
         creneau.setEndTime(updated.getEndTime());
-        creneau.setTypeCours(updated.getTypeCours());
+        creneau.setSport(updated.getSport());
         creneau.setCoach(updated.getCoach());
         return creneauRepository.save(creneau);
     }
@@ -53,32 +53,32 @@ public class AdminController {
     }
 
     // Liste tous les sports
-@GetMapping("/sports")
-public List<Sport> getAllSports() {
-    return sportRepository.findAll();
-}
+    @GetMapping("/sports")
+    public List<Sport> getAllSports() {
+        return sportRepository.findAll();
+    }
 
-// Ajoute un sport
-@PostMapping("/sports")
-public Sport addSport(@RequestBody Sport sport) {
-    return sportRepository.save(sport);
-}
+    // Ajoute un sport
+    @PostMapping("/sports")
+    public Sport addSport(@RequestBody Sport sport) {
+        return sportRepository.save(sport);
+    }
 
-// Met à jour un sport
-@PutMapping("/sports/{id}")
-public Sport updateSport(@PathVariable Long id, @RequestBody Sport updated) {
-    Sport sport = sportRepository.findById(id).orElseThrow();
-    sport.setName(updated.getName());
-    sport.setDescription(updated.getDescription());
-    sport.setImageUrl(updated.getImageUrl());
-    sport.setLien(updated.getLien());
-    sport.setEmojie(updated.getEmojie());
-    return sportRepository.save(sport);
-}
+    // Met à jour un sport
+    @PutMapping("/sports/{id}")
+    public Sport updateSport(@PathVariable Long id, @RequestBody Sport updated) {
+        Sport sport = sportRepository.findById(id).orElseThrow();
+        sport.setName(updated.getName());
+        sport.setDescription(updated.getDescription());
+        sport.setImageUrl(updated.getImageUrl());
+        sport.setLien(updated.getLien());
+        sport.setEmojie(updated.getEmojie());
+        return sportRepository.save(sport);
+    }
 
-// Supprime un sport
-@DeleteMapping("/sports/{id}")
-public void deleteSport(@PathVariable Long id) {
-    sportRepository.deleteById(id);
-}
+    // Supprime un sport
+    @DeleteMapping("/sports/{id}")
+    public void deleteSport(@PathVariable Long id) {
+        sportRepository.deleteById(id);
+    }
 }

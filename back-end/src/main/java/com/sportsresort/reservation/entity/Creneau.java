@@ -23,11 +23,11 @@ public class Creneau {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
-    private String typeCours;
+    private String sport;
 
     private boolean disponible = true;
 
-    private int placesDispo; // ✅ champ ajouté ici
+    private int placesDispo;
 
     @ManyToOne
     private User coach;
