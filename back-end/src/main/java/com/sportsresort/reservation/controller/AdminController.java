@@ -1,9 +1,11 @@
 package com.sportsresort.reservation.controller;
 
 import com.sportsresort.reservation.entity.Creneau;
+import com.sportsresort.reservation.entity.Sport;
 import com.sportsresort.reservation.entity.User;
 import com.sportsresort.reservation.repository.CreneauRepository;
 import com.sportsresort.reservation.repository.UserRepository;
+import com.sportsresort.reservation.repository.SportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +18,11 @@ import java.util.List;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
+    private final SportRepository sportRepository;
     private final UserRepository userRepository;
     private final CreneauRepository creneauRepository;
+
+    // ----- Utilisateurs -----
 
     @GetMapping("/users")
     public List<User> getAllUsers() {
@@ -28,6 +33,8 @@ public class AdminController {
     public void deleteUser(@PathVariable Long id) {
         userRepository.deleteById(id);
     }
+
+    // ----- Créneaux -----
 
     @PostMapping("/creneaux")
     public Creneau addCreneau(@RequestBody Creneau creneau) {
@@ -47,5 +54,33 @@ public class AdminController {
     @DeleteMapping("/creneaux/{id}")
     public void deleteCreneau(@PathVariable Long id) {
         creneauRepository.deleteById(id);
+    }
+
+    // ----- Sports -----
+
+    @GetMapping("/sports")
+    public List<Sport> getAllSports() {
+        return sportRepository.findAll();
+    }
+
+    @PostMapping("/sports")
+    public Sport addSport(@RequestBody Sport sport) {
+        return sportRepository.save(sport);
+    }
+
+    @PutMapping("/sports/{id}")
+    public Sport updateSport(@PathVariable Long id, @RequestBody Sport updated) {
+        Sport sport = sportRepository.findById(id).orElseThrow();
+        sport.setName(updated.getName());
+        sport.setDescription(updated.getDescription());
+        sport.setImageUrl(updated.getImageUrl());
+        sport.setLien(updated.getLien());
+        sport.setEmojie(updated.getEmojie());
+        return sportRepository.save(sport);
+    }
+
+    @DeleteMapping("/sports/{id}")
+    public void deleteSport(@PathVariable Long id) {
+        sportRepository.deleteById(id);
     }
 }
