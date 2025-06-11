@@ -22,9 +22,8 @@ public class AdminController {
     private final UserRepository userRepository;
     private final CreneauRepository creneauRepository;
 
-    AdminController(SportRepository sportRepository) {
-        this.sportRepository = sportRepository;
-    }
+    // The @RequiredArgsConstructor annotation generates a constructor for all final fields,
+    // so an explicit constructor is not needed unless you want custom behavior.
 
     @GetMapping("/users")
     public List<User> getAllUsers() {
