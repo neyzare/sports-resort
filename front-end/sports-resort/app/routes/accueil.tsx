@@ -11,24 +11,24 @@ import { ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/24/solid'
 import { Pagination, Autoplay, Navigation } from 'swiper/modules';
 
 export default function Accueil() {
-  const swiperRef = useRef()
+  const swiperRef = useRef();
 
   const dataHero = {
     title: "Réserve ta séance en quelques clics",
     text: "Que tu sois amateur de sensations fortes ou en quête de bien-être, notre plateforme te permet de réserver " +
       "facilement tes séances dans les meilleures installations sportives autour de toi. " +
       "Trouve ton sport, ton coach ou ton équipe, et reste en mouvement à ton rythme!",
-    button: "Trouve ta séance idéale",
+    button: "Trouve ton sport idéale",
     href: "/",
   }
 
   return(
     <>
       <Header />
-      <Hero title={dataHero.title} text={dataHero.text} button={dataHero.button} href={dataHero.href}/>
+      <Hero image="hero.jpg" title={dataHero.title} text={dataHero.text} button={dataHero.button} href={dataHero.href}/>
       <div className="py-12 px-2 w-full my-container">
         <div className="text-black flex flex-col items-center gap-6">
-          <h2 className="text-heading2">Nos sports</h2>
+          <h2 className="text-heading2 font-bold">Nos sports</h2>
           <h3 className="text-heading3 text-center">Une offre variée pour tous les goûts et tous les niveaux</h3>
           <p className="text-base max-w-4xl mx-auto text-center">
             Du terrain au tapis, explore un large choix de disciplines pour te défouler, te dépasser ou simplement
@@ -75,12 +75,12 @@ export default function Accueil() {
                   }}
                 >
                   <div className="relative h-full w-full rounded-border bg-gradient-to-b to-black/70 lg:bg-none lg:hover:bg-gradient-to-b lg:hover:to-black/70">
-                    <h3 className="text-heading3 absolute bottom-7 left-7 lg:hidden lg:group-hover:block">
+                    <h3 className="text-heading3 absolute bottom-7 left-7 lg:hidden lg:group-hover:block font-bold">
                       Tennis
                     </h3>
                     <Button
-                      name="en savoir plus"
-                      className="absolute bottom-4 right-4 hover:text-white lg:hidden lg:group-hover:block"
+                      name="En savoir plus"
+                      className="absolute bottom-4 right-4 hover:text-white lg:hidden lg:group-hover:block normal-case"
                       href="/"
                     />
                   </div>

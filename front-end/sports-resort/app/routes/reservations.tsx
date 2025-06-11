@@ -35,7 +35,7 @@ export default function Reservations() {
     };
 
     // Attention à supprimer et mettre dans les cookies ou localStorage
-    const [compte, setCompte] = useState("user");
+    const [compte, setCompte] = useState("admin");
 
     const [court1, setCourt1] = useState([
         {
@@ -130,7 +130,7 @@ export default function Reservations() {
                             <div className="flex flex-col text-center flex-grow">
                                 <h3 className="mb-3 font-bold uppercase">Court I</h3>
 
-
+                                {/* TO DO - Regarder pour le disponible pour l'admin */}
                                 {timeSlots.map((slot, index) => {
                                     const reservation = court1.find(r => r.startTime === slot);
 
