@@ -2,6 +2,8 @@ import { Link } from "react-router";
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { ErrorMessage } from "@hookform/error-message";
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
   const {
@@ -11,7 +13,24 @@ export default function LoginForm() {
   } = useForm({
     criteriaMode: "all"
   });
-  const onSubmit = data => console.log(data);
+
+  const nav = useNavigate();
+
+  const onSubmit = data => {
+    console.log(data);
+    axios.post('http://localhost:8080/api/auth/login', {
+      email: data.email,
+      password: data.mdp,
+    })
+      .then(res => {
+        const token = res.data.token;
+        localStorage.setItem('jwt', token);
+        nav('/');
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  }
 
   return (
     <div  className="w-full max-w-sm">
