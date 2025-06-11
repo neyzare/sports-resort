@@ -3,6 +3,8 @@ import Button from "./Button";
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { ErrorMessage } from "@hookform/error-message";
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterForm() {
   const {
@@ -14,10 +16,25 @@ export default function RegisterForm() {
     criteriaMode: "all"
   });
 
+  const nav = useNavigate();
   const password = watch("password");
   const coachType = watch("coach");
 
-  const onSubmit = data => console.log(data);
+  const onSubmit = data =>{
+    console.log(data)
+    axios.post('http://localhost:8080/api/auth/register', {
+        firstname: data.nom,
+        lastname: data.prenom,
+        email: data.email,
+        password: data.password,
+      })
+      .then(function () {
+        nav("/login");
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  };
 
   return (
     <>
@@ -370,6 +387,7 @@ export default function RegisterForm() {
                   <select name="" id=""
                           className="border border-border rounded-border w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                           {...register("Title", {required: true})}>
+                    <option selected disabled>select your sport?</option>
                     <option value="tennis">Tennis</option>
                     <option value="basket">Basket</option>
                   </select>

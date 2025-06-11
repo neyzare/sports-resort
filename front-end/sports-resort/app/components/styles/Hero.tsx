@@ -1,10 +1,10 @@
 import Button from "~/components/styles/Button";
 
-export default function Hero ({title, text, button, href}) {
+export default function Hero ({image, title, text, button, href}: {image:string, title:string, text:string, button:string, href:string}) {
   return (
     <div className="min-h-[650px] w-full relative bg-cover text-white" style={{
       backgroundImage:
-        "url(/medias/images/hero.jpg)",
+        `url(/medias/images/${image})`,
     }}>
       <div className="absolute h-full w-full bg-[#00000099]">
         <div className="flex flex-col items-center justify-center text-center h-full gap-14 max-w-4xl mx-auto px-4">

@@ -12,6 +12,6 @@ public class ReservationDto {
     private Long creneauId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private String typeCours;
+    private String sport;
     private boolean annulee;
 }
