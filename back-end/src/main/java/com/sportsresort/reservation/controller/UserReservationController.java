@@ -60,7 +60,7 @@ public class UserReservationController {
                         .creneauId(r.getCreneau().getId())
                         .startTime(r.getCreneau().getStartTime())
                         .endTime(r.getCreneau().getEndTime())
-                        .typeCours(r.getCreneau().getTypeCours())
+                        .sport(r.getCreneau().getSport())
                         .annulee(r.isAnnulee())
                         .build())
                 .collect(Collectors.toList());
