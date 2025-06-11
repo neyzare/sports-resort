@@ -8,6 +8,7 @@ import com.sportsresort.reservation.repository.UserRepository;
 import com.sportsresort.reservation.repository.SportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class AdminController {
     private final SportRepository sportRepository;
     private final UserRepository userRepository;
     private final CreneauRepository creneauRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     @GetMapping("/users")
@@ -28,7 +30,8 @@ public class AdminController {
     }
 
     @PostMapping("/users")
-    public User addUSer(@RequestBody User user) {
+    public User addUser(@RequestBody User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -39,13 +42,22 @@ public class AdminController {
         user.setLastname(updated.getLastname());
         user.setEmail(updated.getEmail());
         user.setAddress(updated.getAddress());
-        user.setPassword(updated.getPassword());
+        
+        if (updated.getPassword() != null && !updated.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(updated.getPassword()));
+        }
+
         return userRepository.save(user);
     }
 
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable Long id) {
         userRepository.deleteById(id);
+    }
+
+    @GetMapping("/coachs")
+    public List<User> getAllCoaches() {
+        return userRepository.findByRoleName("COACH");
     }
 
     @PostMapping("/creneaux")
