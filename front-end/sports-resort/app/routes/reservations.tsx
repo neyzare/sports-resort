@@ -35,19 +35,27 @@ export default function Reservations() {
     };
 
     // Attention à supprimer et mettre dans les cookies ou localStorage
-    const [compte, setCompte] = useState("admin");
+    const [compte, setCompte] = useState("user");
 
     const [court1, setCourt1] = useState([
         {
         "startTime": "08:00",
         "endTime": "09:00",
-        "type": "occuper"
+        "type": "resaUser",
+        "email": "pablodeteba@icloud.com"
         },
         {
         "startTime": "12:00",
         "endTime": "13:00",
-        "type": "resaCoach"
-        }
+        "type": "resaCoach",
+        "email": "pablodeteba@icloud.com"
+        },
+        {
+        "startTime": "15:00",
+        "endTime": "16:00",
+        "type": "resaUser",
+        "email": "deteba@icloud.com"
+        },
     ]);
     const [court2, setCourt2] = useState([]);
     const [court3, setCourt3] = useState([]);
@@ -140,6 +148,8 @@ export default function Reservations() {
                                             key={index}
                                             index={index}
                                             type={reservation.type}
+                                            heure={reservation.startTime}
+                                            email={reservation.email}
                                         />
                                         );
                                     } else {
