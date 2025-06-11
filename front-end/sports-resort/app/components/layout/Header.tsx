@@ -3,7 +3,8 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Button from "../styles/Button";
 import { useLocation } from 'react-router'
-import {useState} from 'react'
+import {useEffect,useState} from 'react'
+import { isAuthenticated } from '../../lib/auth';
 
 const navigation = [
     { name: 'Accueil', href: '/', current: true },
@@ -15,7 +16,7 @@ const navigation = [
 const menu = [
     { name: 'Profile', href: '/profile', current: true },
     { name: 'Planning', href: '/', current: false },
-    { name: 'Sign out', href: '/', current: false },
+    { name: 'Sign out', href: '#', current: false, action: 'logout' },
 ]
 
 function classNames(...classes:any[]) {
@@ -25,6 +26,10 @@ function classNames(...classes:any[]) {
 export default function Example() {
     let location = useLocation()
     const [isLogged, setIsLogged] = useState(false)
+
+    useEffect(() => {
+        setIsLogged(isAuthenticated());
+    }, []);
 
     return (
         <Disclosure as="nav" className="bg-light-white">
@@ -98,14 +103,20 @@ export default function Example() {
                                   className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-light-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
                                 >
                                     {menu.map((item) => (
-                                        <MenuItem key={item.name}>
-                                            <a
-                                                href={item.href}
-                                                className="block px-4 py-2 text-small text-black data-focus:bg-gray-100 data-focus:outline-hidden"
-                                            >
-                                                {item.name}
-                                            </a>
-                                        </MenuItem>
+                                      <MenuItem key={item.name}>
+                                          <a
+                                            href={item.href}
+                                            onClick={() => {
+                                                if (item.action === 'logout') {
+                                                    localStorage.removeItem('jwt');
+                                                    window.location.reload();
+                                                }
+                                            }}
+                                            className="block px-4 py-2 text-small text-black data-focus:bg-gray-100 data-focus:outline-hidden"
+                                          >
+                                              {item.name}
+                                          </a>
+                                      </MenuItem>
                                     ))}
                                 </MenuItems>
                             </Menu>

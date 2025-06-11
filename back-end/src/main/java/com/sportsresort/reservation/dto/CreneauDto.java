@@ -9,7 +9,7 @@ public class CreneauDto {
     private Long id;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private String typeCours;
+    private String sport;
     private boolean disponible;
     private String coachName;
 }

@@ -1,20 +1,64 @@
 import { useState } from "react";
 import Header from "~/components/layout/Header";
+import { fr } from "react-day-picker/locale";
 
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
+import ReservationPopUp from "~/components/styles/ReservationPopUp";
 
 export default function Reservations() {
-    const today = new Date();
-    const options: Intl.DateTimeFormatOptions = {
+
+    // Selection de la date dans la page
+    const [selected, setSelected] = useState<Date>(() => new Date());
+
+    const formattedDate = selected?.toLocaleDateString('fr-FR', {
         weekday: 'long',
         day: 'numeric',
         month: 'long',
         year: 'numeric',
-    };
-    const formattedDate = today.toLocaleDateString('fr-FR', options);
+    }) ?? 'Sélectionnez une date';
 
-    const [selected, setSelected] = useState<Date>();
+    const goToPreviousDay = () => {
+        setSelected((prev) => {
+            const date = new Date(prev);
+            date.setDate(date.getDate() - 1);
+            return date;
+        });
+    };
+
+    const goToNextDay = () => {
+        setSelected((prev) => {
+            const date = new Date(prev);
+            date.setDate(date.getDate() + 1);
+            return date;
+        });
+    };
+
+    // Attention à supprimer et mettre dans les cookies ou localStorage
+    const [compte, setCompte] = useState("admin");
+
+    const [court1, setCourt1] = useState([
+        {
+        "startTime": "08:00",
+        "endTime": "09:00",
+        "type": "occuper"
+        },
+        {
+        "startTime": "12:00",
+        "endTime": "13:00",
+        "type": "resaCoach"
+        }
+    ]);
+    const [court2, setCourt2] = useState([]);
+    const [court3, setCourt3] = useState([]);
+    const [court4, setCourt4] = useState([]);
+
+    const timeSlots = Array.from({ length: 12 }, (_, index) => {
+        const hour = index + 8;
+        return `${hour.toString().padStart(2, "0")}:00`;
+    });
+
+
 
     return (
         <>
@@ -42,13 +86,16 @@ export default function Reservations() {
                         <h3 className="text-center font-bold uppercase py-3">calendrier</h3>
                         <div className="bg-light-white rounded-border px-4 py-6 border border-border">
                             <DayPicker
+                                locale={fr}
                                 animate
                                 mode="single"
                                 selected={selected}
                                 onSelect={setSelected}
-                                // footer={
-                                //     selected ? `Selected: ${selected.toLocaleDateString()}` : "Pick a day."
-                                // }
+                                classNames={{
+                                    today: `stroke-blue`,
+                                    chevron: `fill-blue`,
+                                    selected: 'bg-blue text-white rounded-full',
+                                }}
                             />
                         </div>
                     </div>
@@ -58,13 +105,17 @@ export default function Reservations() {
                 </div>
                 <div className="flex-grow">
                     <div className="flex gap-2 py-3 justify-center items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" className="size-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-                        </svg>
+                        <a onClick={goToPreviousDay}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" className="size-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                            </svg>
+                        </a>
                         <p className="font-bold uppercase">{formattedDate}</p>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" className="size-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                        </svg>
+                        <a onClick={goToNextDay}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" className="size-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                            </svg>
+                        </a>
                     </div>
                     <div className="bg-light-white rounded-border px-8 py-6 border border-border flex gap-4">
                         <div className="w-fit pt-6">
@@ -78,107 +129,85 @@ export default function Reservations() {
                         <div className="flex flex-grow gap-4">
                             <div className="flex flex-col text-center flex-grow">
                                 <h3 className="mb-3 font-bold uppercase">Court I</h3>
-                                {Array.from({ length: 12 }).map((_, index) => (
-                                    <>
-                                        <a
-                                        key={index}
-                                        href=""
-                                        className="w-full border-blue text-blue hover:text-white hover:bg-blue border-2 rounded-border px-6 py-2 duration-200 ease-in-out uppercase font-bold m-1"
-                                        >
-                                            Réserver
-                                        </a>
-                                        {/* <a
-                                        key={index}
-                                        className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
-                                        >
-                                            occuper
-                                        </a>
-                                        <a
-                                        key={index}
-                                        className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
-                                        >
-                                            🎾 Coach
-                                        </a> */}
-                                    </>
-                                ))}
+
+                                {/* TO DO - Regarder pour le disponible pour l'admin */}
+                                {timeSlots.map((slot, index) => {
+                                    const reservation = court1.find(r => r.startTime === slot);
+
+                                    if (reservation) {
+                                        return (
+                                        <ReservationPopUp
+                                            key={index}
+                                            index={index}
+                                            type={reservation.type}
+                                        />
+                                        );
+                                    } else {
+                                        return (
+                                        <ReservationPopUp index={index}/>
+                                        );
+                                    }
+                                })}
                             </div>
                             <div className="flex flex-col text-center flex-grow">
                                 <h3 className="mb-3 font-bold uppercase">Court II</h3>
-                                {Array.from({ length: 12 }).map((_, index) => (
-                                    <>
-                                        <a
-                                        key={index}
-                                        href=""
-                                        className="w-full border-blue text-blue hover:text-white hover:bg-blue border-2 rounded-border px-6 py-2 duration-200 ease-in-out uppercase font-bold m-1"
-                                        >
-                                            Réserver
-                                        </a>
-                                        {/* <a
-                                        key={index}
-                                        className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
-                                        >
-                                            occuper
-                                        </a>
-                                        <a
-                                        key={index}
-                                        className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
-                                        >
-                                            🎾 Coach
-                                        </a> */}
-                                    </>
-                                ))}
+                                {timeSlots.map((slot, index) => {
+                                    const reservation = court2.find(r => r.startTime === slot);
+
+                                    if (reservation) {
+                                        return (
+                                        <ReservationPopUp
+                                            key={index}
+                                            index={index}
+                                            type={reservation.type}
+                                        />
+                                        );
+                                    } else {
+                                        return (
+                                        <ReservationPopUp index={index}/>
+                                        );
+                                    }
+                                })}
                             </div>
                             <div className="flex flex-col text-center flex-grow">
                                 <h3 className="mb-3 font-bold uppercase">Court III</h3>
-                                {Array.from({ length: 12 }).map((_, index) => (
-                                    <>
-                                        <a
-                                        key={index}
-                                        href=""
-                                        className="w-full border-blue text-blue hover:text-white hover:bg-blue border-2 rounded-border px-6 py-2 duration-200 ease-in-out uppercase font-bold m-1"
-                                        >
-                                            Réserver
-                                        </a>
-                                        {/* <a
-                                        key={index}
-                                        className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
-                                        >
-                                            occuper
-                                        </a>
-                                        <a
-                                        key={index}
-                                        className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
-                                        >
-                                            🎾 Coach
-                                        </a> */}
-                                    </>
-                                ))}
+                                {timeSlots.map((slot, index) => {
+                                    const reservation = court3.find(r => r.startTime === slot);
+
+                                    if (reservation) {
+                                        return (
+                                        <ReservationPopUp
+                                            key={index}
+                                            index={index}
+                                            type={reservation.type}
+                                        />
+                                        );
+                                    } else {
+                                        return (
+                                        <ReservationPopUp index={index}/>
+                                        );
+                                    }
+                                })}
                             </div>
                             <div className="flex flex-col text-center flex-grow">
                                 <h3 className="mb-3 font-bold uppercase">Court IV</h3>
-                                {Array.from({ length: 12 }).map((_, index) => (
-                                    <>
-                                        <a
-                                        key={index}
-                                        href=""
-                                        className="w-full border-blue text-blue hover:text-white hover:bg-blue border-2 rounded-border px-6 py-2 duration-200 ease-in-out uppercase font-bold m-1"
-                                        >
-                                            Réserver
-                                        </a>
-                                        {/* <a
-                                        key={index}
-                                        className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
-                                        >
-                                            occuper
-                                        </a>
-                                        <a
-                                        key={index}
-                                        className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-50 cursor-not-allowed"
-                                        >
-                                            🎾 Coach
-                                        </a> */}
-                                    </>
-                                ))}
+                                {timeSlots.map((slot, index) => {
+                                    const reservation = court4.find(r => r.startTime === slot);
+
+                                    if (reservation) {
+                                        return (
+                                        <ReservationPopUp
+                                            key={index}
+                                            index={index}
+                                            type={reservation.type}
+                                        />
+                                        );
+                                    } else {
+                                        return (
+                                        <ReservationPopUp index={index}/>
+                                        );
+                                    }
+                                })}
                             </div>
                         </div>
                     </div>
