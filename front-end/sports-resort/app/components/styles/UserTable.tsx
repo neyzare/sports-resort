@@ -14,10 +14,13 @@ export default function UserTable({ users, onDelete }) {
       </thead>
       <tbody>
       {users.map((u, i) => (
-        <tr key={i} className="bg-white border-b">
+        <tr key={u.id || i} className="bg-white border-b">
           <td className="px-6 py-4 flex gap-2">
             <PencilSquareIcon className="size-6" />
-            <TrashIcon className="size-6" />
+            <TrashIcon
+              className="size-6 text-red-600 cursor-pointer"
+              onClick={() => onDelete(u.id)}
+            />
           </td>
           <td className="px-6 py-4">{u.firstname}</td>
           <td className="px-6 py-4">{u.lastname}</td>

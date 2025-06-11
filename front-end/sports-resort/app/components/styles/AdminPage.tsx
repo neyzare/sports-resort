@@ -71,6 +71,20 @@ export default function Sport() {
     }
   };
 
+  const handleDeleteUser = async (userId) => {
+    try {
+      await axios.delete(`http://localhost:8080/api/admin/users/${userId}`, {
+        headers: { Authorization: `Bearer ${TOKEN}` },
+      });
+      const res = await axios.get('http://localhost:8080/api/admin/users', {
+        headers: { Authorization: `Bearer ${TOKEN}` },
+      });
+      setUsers(res.data);
+    } catch (err) {
+      console.error("Erreur lors de la suppression du user:", err);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -87,7 +101,7 @@ export default function Sport() {
 
         <div className="bg-light-white rounded-border my-8">
           {status === 'user' ? (
-            <UserTable users={users} />
+            <UserTable users={users} onDelete={handleDeleteUser}/>
           ) : (
             <SportTable sports={sports} onDelete={handleDeleteSport}/>
           )}
