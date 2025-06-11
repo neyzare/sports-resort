@@ -41,7 +41,7 @@ public class DataInitializer {
             // Créer un coach fictif
             User coach = createUserIfNotExists("coach@test.com", "coach", "Coach", "Test", Set.of(coachRole));
 
-            // Créer un coach fictif
+            // Créer un user fictif
             createUserIfNotExists("user@test.com", "user", "User", "Test", Set.of(userRole));
 
             // Créer des créneaux si vide
@@ -52,7 +52,7 @@ public class DataInitializer {
                         .startTime(LocalDateTime.of(2025, 6, 10, 10, 0))
                         .endTime(LocalDateTime.of(2025, 6, 10, 11, 0))
                         .coach(coach)
-                        .typeCours("Tennis")
+                        .sport("Tennis")
                         .placesDispo(10)
                         .build()
                 );
@@ -63,7 +63,7 @@ public class DataInitializer {
                         .startTime(LocalDateTime.of(2025, 6, 10, 18, 0))
                         .endTime(LocalDateTime.of(2025, 6, 10, 19, 0))
                         .coach(coach)
-                        .typeCours("Tennis")
+                        .sport("Tennis")
                         .placesDispo(12)
                         .build()
                 );
