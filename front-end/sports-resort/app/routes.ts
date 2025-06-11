@@ -6,5 +6,5 @@ export default [index("routes/accueil.tsx"),
     route("reservations", "routes/reservations.tsx"),
     route("sports", "routes/sports.tsx"),
     route("profile", "routes/profile.tsx"),
-
+    route("admin", "routes/admin.tsx"),
 ] satisfies RouteConfig;

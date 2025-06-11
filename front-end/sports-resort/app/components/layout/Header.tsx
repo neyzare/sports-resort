@@ -4,7 +4,7 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Button from "../styles/Button";
 import { useLocation } from 'react-router'
 import {useEffect,useState} from 'react'
-import { isAuthenticated } from '../../lib/auth';
+import { getUserRoleFromToken, isAuthenticated } from '../../lib/auth';
 
 const navigation = [
     { name: 'Accueil', href: '/', current: true },
@@ -25,10 +25,16 @@ function classNames(...classes:any[]) {
 
 export default function Example() {
     let location = useLocation()
+
+    const [isAdmin, setIsAdmin] = useState(false);
     const [isLogged, setIsLogged] = useState(false)
 
     useEffect(() => {
         setIsLogged(isAuthenticated());
+        const role = getUserRoleFromToken();
+        if (role === 'ADMIN') {
+            setIsAdmin(true);
+        }
     }, []);
 
     return (
@@ -65,8 +71,15 @@ export default function Example() {
                                             aria-current={item.current ? 'page' : undefined}>
                                             {item.name}
                                         </Link>
+
+
                                     </>
                                 ))}
+                                {isAdmin && (
+                                  <Link to="/admin" className=" px-3 py-2 rounded-md text-sm font-medium">
+                                      Admin
+                                  </Link>
+                                )}
                             </div>
                         </div>
                         <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 ">
