@@ -11,6 +11,7 @@ import AddUserModal from '~/components/styles/AddUserModal';
 import AddSportModal from '~/components/styles/AddSportModal';
 
 const API_BASE = 'http://localhost:8080/api/admin';
+// TODO : - Fixer le bug des rôles lors de la création de l'utilisateur par l'admin dans le backoffice (les utilisateurs créés manuellement n'ont pas de rôle)
 const defaultUser = { firstname: '', lastname: '', email: '', password: '', role: 'USER' };
 const defaultSport = { name: '', description: '', emojie: '', imageUrl: '', lien: '' };
 
@@ -44,6 +45,7 @@ export default function Sport() {
   };
 
   const handleAddUser = async () => {
+    console.log(newUser)
     await axios.post(`${API_BASE}/users`, newUser, { headers });
     setNewUser(defaultUser);
     setShowUserModal(false);
