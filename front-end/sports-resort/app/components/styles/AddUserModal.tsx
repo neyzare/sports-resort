@@ -29,6 +29,7 @@ export default function AddUserModal({ newUser, setNewUser, onClose, onSubmit })
       >
         <option value="USER">Utilisateur</option>
         <option value="ADMIN">Administrateur</option>
+        <option value="COACH">Coach</option>
       </select>
       <Button name="Créer l'utilisateur" className="w-full" onClick={onSubmit} />
     </Modal>

@@ -3,6 +3,8 @@ import Header from "~/components/layout/Header";
 import Button from "~/components/styles/Button";
 import Hero from "~/components/styles/Hero";
 import tennis from "medias/images/tennis.webp"
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const sports = [
   { title: 'tennis',
@@ -37,7 +39,27 @@ const dataHero = {
   href: "/reservations",
 }
 
+const API_BASE = 'http://localhost:8080/api';
+
 export default function Sport () {
+  const [sportslist, setSports] = useState([]);
+
+  useEffect(() => {
+    loadSports();
+  }, []);
+
+  const loadSports = async () => {
+    try {
+      const [sRes] = await Promise.all([
+        axios.get(`${API_BASE}/sports`)
+      ]);
+      setSports(sRes.data);
+    } catch (e) {
+      console.error('Erreur fetch:', e);
+    }
+  }
+
+
   return (
     <>
       <Header/>
