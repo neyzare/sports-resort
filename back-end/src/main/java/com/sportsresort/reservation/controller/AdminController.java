@@ -1,9 +1,11 @@
 package com.sportsresort.reservation.controller;
 
 import com.sportsresort.reservation.entity.Creneau;
+import com.sportsresort.reservation.entity.Role;
 import com.sportsresort.reservation.entity.Sport;
 import com.sportsresort.reservation.entity.User;
 import com.sportsresort.reservation.repository.CreneauRepository;
+import com.sportsresort.reservation.repository.RoleRepository;
 import com.sportsresort.reservation.repository.SportRepository;
 import com.sportsresort.reservation.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +34,10 @@ public class AdminController {
     private final UserRepository userRepository;
     private final CreneauRepository creneauRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     private final String uploadDir = "/Users/lucas/Desktop/sport-resort/sports-resort/back-end/src/main/java/com/sportsresort/uploads/sports";
 
-    // 🔹 Gestion des utilisateurs
     @GetMapping("/users")
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -91,7 +93,6 @@ public class AdminController {
         creneauRepository.deleteById(id);
     }
 
-    // 🔹 Gestion des sports avec image
     @PostMapping("/sports/upload")
     public ResponseEntity<?> addSportWithImage(
             @RequestParam("name") String name,
@@ -210,5 +211,10 @@ public class AdminController {
 
         sportRepository.deleteById(id);
         return ResponseEntity.ok("Sport supprimé.");
+    }
+
+    @GetMapping("/roles")
+    public List<Role> getAllRoles() {
+        return roleRepository.findAll();
     }
 }

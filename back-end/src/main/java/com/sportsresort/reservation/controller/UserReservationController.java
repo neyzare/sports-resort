@@ -77,7 +77,7 @@ public class UserReservationController {
                         .creneauId(r.getCreneau().getId())
                         .startTime(r.getCreneau().getStartTime())
                         .endTime(r.getCreneau().getEndTime())
-                        .sport(r.getCreneau().getSport())
+                        .sport(r.getCreneau().getSport().getName())
                         .annulee(r.isAnnulee())
                         .coachName(r.getCoach() != null ? r.getCoach().getFirstname() : null)
                         .build())

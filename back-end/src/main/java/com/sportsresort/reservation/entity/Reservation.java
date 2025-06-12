@@ -19,7 +19,7 @@ public class Reservation {
     private Creneau creneau;
 
     @ManyToOne
-    private User coach; // Coach choisi pour cette réservation (optionnel)
+    private User coach;
 
-    private boolean annulee = false;
+    private boolean annulee;
 }

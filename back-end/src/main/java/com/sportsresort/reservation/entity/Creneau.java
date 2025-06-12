@@ -23,9 +23,12 @@ public class Creneau {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
-    private String sport;
+    private String cours;
 
-    private boolean disponible = true;
+    @ManyToOne
+    private Sport sport;
+
+    private boolean disponible;
 
     private int placesDispo;
 
