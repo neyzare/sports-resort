@@ -1,8 +1,54 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import Footer from "~/components/layout/Footer";
 import Header from "~/components/layout/Header";
 import Button from "~/components/styles/Button";
+import { getUserEmailFromToken } from "~/lib/auth";
 
-export default function Sport () {
+const API_BASE = 'http://localhost:8080/api/users';
+
+interface User {
+  firstname: string;
+  lastname: string;
+  email: string;
+  roles: Role[];
+}
+
+interface Role {
+  id: number;
+  name: string;
+}
+
+export default function Profile () {
+  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    // This effect only runs in the browser
+    const stored = localStorage.getItem('jwt');
+    setToken(stored);
+  }, []);
+
+  useEffect(() => {
+    if (!token) return;          // don't fetch until we have the token
+    const headers = { Authorization: `Bearer ${token}` };
+
+    (async () => {
+      try {
+        const { data } = await axios.get(
+          `${API_BASE}/${getUserEmailFromToken()}`,
+          { headers },
+        );
+        setUser(data);
+      } catch (err) {
+        console.error('Erreur fetch:', err);
+      }
+    })();
+  }, [token]);
+
+  console.log(user);
+
+
   return (
     <>
       <Header/>
@@ -16,18 +62,18 @@ export default function Sport () {
               className="size-40 md:size-26 rounded-full"
             />
             <div className="text-center text-base space-y-2 md:text-start">
-              <p>Matéo Grange</p>
+              <p>{user?.firstname} {user?.lastname}</p>
               <p>France</p>
-              <p>admin</p>
+              <p>{user?.roles?.[0]?.name ?? 'aucun rôle'}</p>
             </div>
           </div>
-          <div className="flex flex-col items-center md:flex-row">
+          <div className="flex flex-col items-center md:flex-row text-xs">
             <Button name="modifier mes infos"
                     className="w-fit"
                     href="/"
             />
             <Button name="supprimer mon compte"
-                    className="border-red bg-red hover:text-red"
+                    className="border-red bg-red hover:text-red text-xs"
                     href="/"
             />
           </div>
@@ -39,12 +85,12 @@ export default function Sport () {
           <div className="grid grid-cols-2 gap-4 gap-x-8 md:grid-cols-3 place-items-center">
             <div className="flex flex-col text-center">
               <p className="text-light-text">Nom</p>
-              <p>Grange</p>
+              <p>{user?.lastname}</p>
             </div>
 
             <div className="flex flex-col text-center">
               <p className="text-light-text">Prenom</p>
-              <p>Matéo</p>
+              <p>{user?.firstname}</p>
             </div>
 
             <div className="flex flex-col text-center">
@@ -59,12 +105,12 @@ export default function Sport () {
 
             <div className="flex flex-col text-center">
               <p className="text-light-text">Email</p>
-              <p>ouioui@gmail.com</p>
+              <p>{user?.email}</p>
             </div>
 
             <div className="flex flex-col text-center">
               <p className="text-light-text">Rôle</p>
-              <p>admin</p>
+              <p>{user?.roles?.[0]?.name ?? 'aucun rôle'}</p>
             </div>
           </div>
         </div>

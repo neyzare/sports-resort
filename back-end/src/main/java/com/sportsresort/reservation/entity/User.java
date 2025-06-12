@@ -17,8 +17,12 @@ public class User {
     private String firstname;
     private String lastname;
     private String email;
-    private String address;
     private String password;
+    private String dateofbirth;
+    private String country;
+    private String city;
+    private String zipcode;
+    private String phonenumber;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

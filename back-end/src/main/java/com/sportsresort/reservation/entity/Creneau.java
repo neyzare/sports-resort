@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -20,12 +20,15 @@ public class Creneau {
 
     private LocalDate date;
 
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
 
-    private String sport;
+    private int cours;
 
-    private boolean disponible = true;
+    @ManyToOne
+    private Sport sport;
+
+    private boolean disponible;
 
     private int placesDispo;
 

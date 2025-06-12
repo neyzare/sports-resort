@@ -65,6 +65,11 @@ public class AuthServiceImpl implements AuthService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .roles(Collections.singleton(userRole))
+                .dateofbirth(request.getDateofbirth())
+                .country(request.getCountry())
+                .city(request.getCity())
+                .zipcode(request.getZipcode())
+                .phonenumber(request.getPhonenumber())
                 .build();
 
         userRepository.save(user);
