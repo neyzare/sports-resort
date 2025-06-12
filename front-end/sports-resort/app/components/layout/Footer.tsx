@@ -6,8 +6,7 @@ export default function Footer () {
                     <div className="md:flex md:justify-between">
                         <div className="mb-6 md:mb-0">
                             <a href="https://flowbite.com/" className="flex items-center">
-                                <img src="medias/images/logo-sport-resort.png" className="h-8 me-3"
-                                     alt="FlowBite Logo"/>
+                                <img src="medias/images/logo-sport-resort.png" className="h-8 me-3" alt="FlowBite Logo"/>
                             </a>
                         </div>
                         <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
@@ -27,8 +26,7 @@ export default function Footer () {
                                     us</h2>
                                 <ul className="text-light-text font-medium">
                                     <li className="mb-4">
-                                        <a href="https://github.com/themesberg/flowbite"
-                                           className="hover:underline ">Github</a>
+                                        <a href="https://github.com/themesberg/flowbite" className="hover:underline ">Github</a>
                                     </li>
                                     <li>
                                         <a href="https://discord.gg/4eeurUVvTy" className="hover:underline">Discord</a>
