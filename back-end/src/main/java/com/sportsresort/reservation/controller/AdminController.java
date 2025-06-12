@@ -57,6 +57,13 @@ public class AdminController {
                     .collect(Collectors.toSet());
             user.setRoles(userRoles);
         }
+        if (user.getSports() != null && !user.getSports().isEmpty()) {
+            Set<Sport> validSports = sportRepository.findAllById(
+                user.getSports().stream().map(Sport::getId).toList()
+            ).stream().collect(Collectors.toSet());
+
+            user.setSports(validSports);
+        }
 
         User savedUser = userRepository.save(user);
         return ResponseEntity.ok(savedUser);
@@ -85,13 +92,19 @@ public class AdminController {
         }
 
         if (updated.getRoles() != null && !updated.getRoles().isEmpty()) {
-            // Assigner uniquement les rôles valides existants en BDD
             List<Role> allRoles = roleRepository.findAll();
             Set<Role> matchedRoles = allRoles.stream()
                 .filter(dbRole -> updated.getRoles().stream()
                     .anyMatch(inputRole -> inputRole.getName().equalsIgnoreCase(dbRole.getName())))
                 .collect(Collectors.toSet());
             user.setRoles(matchedRoles);
+        }
+        if (user.getSports() != null && !user.getSports().isEmpty()) {
+            Set<Sport> validSports = sportRepository.findAllById(
+                user.getSports().stream().map(Sport::getId).toList()
+            ).stream().collect(Collectors.toSet());
+
+            user.setSports(validSports);
         }
 
         User savedUser = userRepository.save(user);
