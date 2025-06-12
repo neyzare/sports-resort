@@ -19,7 +19,7 @@ export default function Accueil() {
       "facilement tes séances dans les meilleures installations sportives autour de toi. " +
       "Trouve ton sport, ton coach ou ton équipe, et reste en mouvement à ton rythme!",
     button: "Trouve ton sport idéale",
-    href: "/",
+    href: "/sports",
   }
 
   return(

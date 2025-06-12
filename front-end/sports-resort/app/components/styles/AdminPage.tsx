@@ -44,6 +44,10 @@ export default function Sport() {
     }
   };
 
+  console.log("tutu");
+  console.log(sports);
+  console.log("tutu");
+
   const handleAddUser = async () => {
     console.log(newUser)
     await axios.post(`${API_BASE}/users`, newUser, { headers });
