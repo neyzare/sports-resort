@@ -24,13 +24,12 @@ export default function Profile () {
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    // This effect only runs in the browser
     const stored = localStorage.getItem('jwt');
     setToken(stored);
   }, []);
 
   useEffect(() => {
-    if (!token) return;          // don't fetch until we have the token
+    if (!token) return;
     const headers = { Authorization: `Bearer ${token}` };
 
     (async () => {

@@ -34,4 +34,7 @@ public class Creneau {
 
     @ManyToOne
     private User coach;
+
+    @ManyToOne
+    private User user;
 }

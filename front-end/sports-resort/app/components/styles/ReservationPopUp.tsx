@@ -6,28 +6,38 @@ import { BarsArrowUpIcon } from '@heroicons/react/24/outline'
 import { getUserEmailFromToken, getUserRoleFromToken } from '~/lib/auth';
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:8080/api/';
+const API_BASE = 'http://localhost:8080/api';
 
 export default function ReservationPopUp({ role, type, index, formatedDate, date, heure, userEmail, email }: { role: string | null, type: string, index: number, formatedDate?: string, date?: string, heure: string, userEmail: string | null, email: string | null }) {
   const [open, setOpen] = useState(false);
   const [selectedHeure, setSelectedHeure] = useState<string>();
   const [reservationType, setReservationType] = useState<'solo' | 'coach'>('solo');
-  const [sports, setSports] = useState([]);
+  const [sports, setSports] = useState<Sport[]>([]);
+  const [token, setToken] = useState<string | null>(null);
+
+  type Sport = { id: number; name: string, emojie: string }
 
   useEffect(() => {
-    loadSports();
+    const stored = localStorage.getItem('jwt');
+    setToken(stored);
   }, []);
 
-  const loadSports = async () => {
-    try {
-      const [sRes] = await Promise.all([
-        axios.get(`${API_BASE}/sports`),
-      ]);
-      setSports(sRes.data);
-    } catch (e) {
-      console.error('Erreur fetch:', e);
-    }
-  };
+  useEffect(() => {
+    if (!token) return;
+    const headers = { Authorization: `Bearer ${token}` };
+
+    (async () => {
+      try {
+        const { data } = await axios.get(
+          `${API_BASE}/sports`,
+          { headers },
+        );
+        setSports(data);
+      } catch (err) {
+        console.error('Erreur fetch:', err);
+      }
+    })();
+  }, [token]);
 
   console.log(sports);
 
@@ -151,8 +161,11 @@ export default function ReservationPopUp({ role, type, index, formatedDate, date
                               <option value="" disabled>
                                 Sélectionnez un sport
                               </option>
-                              <option value="tennis">Tennis</option>
-                              <option value="football">Football</option>
+                              {sports.map((sport) => (
+                                <option key={sport.id} value={sport.name}>
+                                  {sport.emojie} {sport.name}
+                                </option>
+                              ))}
                             </select>
 
                             <fieldset>
