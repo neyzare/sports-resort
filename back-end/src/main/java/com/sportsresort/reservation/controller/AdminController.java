@@ -54,7 +54,6 @@ public class AdminController {
         user.setLastname(updated.getLastname());
         user.setEmail(updated.getEmail());
         user.setAddress(updated.getAddress());
-
         if (updated.getPassword() != null && !updated.getPassword().isBlank()) {
             user.setPassword(passwordEncoder.encode(updated.getPassword()));
         }
@@ -72,7 +71,6 @@ public class AdminController {
         return userRepository.findByRoleName("COACH");
     }
 
-    // 🔹 Gestion des créneaux
     @PostMapping("/creneaux")
     public Creneau addCreneau(@RequestBody Creneau creneau) {
         return creneauRepository.save(creneau);
@@ -138,6 +136,12 @@ public class AdminController {
     public List<Sport> getAllSports() {
         return sportRepository.findAll();
     }
+
+    @PostMapping("/sports")
+    public Sport addSport(@RequestBody Sport sport) {
+        return sportRepository.save(sport);
+    }
+
 
     @PutMapping("/sports/{id}")
     public ResponseEntity<?> updateSport(

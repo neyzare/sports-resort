@@ -4,18 +4,19 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Button from "../styles/Button";
 import { useLocation } from 'react-router'
 import {useEffect,useState} from 'react'
-import { isAuthenticated } from '../../lib/auth';
+import { getUserRoleFromToken, isAuthenticated } from '../../lib/auth';
 
 const navigation = [
-    { name: 'Accueil', href: '/', current: true },
-    { name: 'Réservations', href: '/reservations', current: false },
-    { name: 'Sports', href: '/sports', current: false },
-    { name: 'Devenir coach', href: '/register', current: false},
+    { name: 'Accueil', href: '/', current: true, guestOnly: false },
+    { name: 'Réservations', href: '/reservations', current: false, guestOnly: false },
+    { name: 'Sports', href: '/sports', current: false, guestOnly: false },
+    { name: 'Devenir coach', href: '/register', current: false, guestOnly: true },
+    { name: 'Admin', href: '/admin', current: false, role: 'admin' }
 ]
 
 const menu = [
     { name: 'Profile', href: '/profile', current: true },
-    { name: 'Planning', href: '/', current: false },
+    { name: 'Planning', href: '/reservations', current: false },
     { name: 'Sign out', href: '#', current: false, action: 'logout' },
 ]
 
@@ -25,11 +26,25 @@ function classNames(...classes:any[]) {
 
 export default function Example() {
     let location = useLocation()
+
+    const [isAdmin, setIsAdmin] = useState(false);
     const [isLogged, setIsLogged] = useState(false)
 
     useEffect(() => {
         setIsLogged(isAuthenticated());
+        const role = getUserRoleFromToken();
+        if (role === 'ADMIN') {
+            setIsAdmin(true);
+        }
     }, []);
+
+    const navToShow = navigation.filter(item => {
+        if (item.guestOnly && isLogged) return false;
+
+        if (item.role === 'admin' && !isAdmin) return false;
+
+        return true;
+    });
 
     return (
         <Disclosure as="nav" className="bg-light-white">
@@ -45,22 +60,24 @@ export default function Example() {
                     </div>
                     <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-between ">
                         <div className="flex shrink-0 items-center">
-                            <img
-                                alt="Your Company"
-                                src="medias/images/logo-sport-resort.png"
-                                className="h-8 w-auto"
-                            />
+                            <Link to="/">
+                                <img
+                                    alt="Your Company"
+                                    src="medias/images/logo-sport-resort.png"
+                                    className="h-8 w-auto"
+                                />
+                            </Link>
                         </div>
                         <div className="hidden sm:ml-6 sm:block my-auto">
                             <div className="flex space-x-4">
-                                {navigation.map((item) => (
+                                {navToShow.map((item) => (
                                     <>
                                         <Link
                                             key={item.name}
                                             to={item.href}
                                             className={classNames(
-                                              location.pathname == item.href ? 'bg-blue text-white' : 'text-black hover:scale-110 hover:ease-in-out',
-                                              'rounded-full px-3 py-2 text-small font-medium hover:scale-110 ease-in-out duration-200',
+                                                location.pathname == item.href ? 'bg-blue text-white' : 'text-black hover:scale-110 hover:ease-in-out',
+                                                'rounded-full px-3 py-2 text-small font-medium hover:scale-110 ease-in-out duration-200',
                                             )}
                                             aria-current={item.current ? 'page' : undefined}>
                                             {item.name}
@@ -83,7 +100,6 @@ export default function Example() {
                                       </>
                                       :
                                       <>
-                                          {/*<p>Bonjour, Guigui</p>*/}
                                           <MenuButton
                                             className="relative flex rounded-full  text-small focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue focus:outline-hidden">
                                               <span className="absolute -inset-1.5"/>
