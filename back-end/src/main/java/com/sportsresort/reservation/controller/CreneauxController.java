@@ -26,8 +26,6 @@ public class CreneauxController {
         return creneauRepository.findAll();
     }
 
-    
-
     @GetMapping("/{date}/{court}")
     public List<Creneau> getCreneauxByDateAndCourt(
             @PathVariable
