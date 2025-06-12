@@ -38,6 +38,7 @@ public class AdminController {
 
     private final String uploadDir = "/Users/lucas/Desktop/sport-resort/sports-resort/back-end/src/main/java/com/sportsresort/uploads/sports";
 
+    // 🔹 Gestion des utilisateurs
     @GetMapping("/users")
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -73,6 +74,12 @@ public class AdminController {
         return userRepository.findByRoleName("COACH");
     }
 
+    @GetMapping("/coachs")
+    public List<User> getAllCoaches() {
+        return userRepository.findByRoleName("COACH");
+    }
+
+    // 🔹 Gestion des créneaux
     @PostMapping("/creneaux")
     public Creneau addCreneau(@RequestBody Creneau creneau) {
         return creneauRepository.save(creneau);
@@ -138,11 +145,11 @@ public class AdminController {
         return sportRepository.findAll();
     }
 
+    // Ajoute un sport
     @PostMapping("/sports")
     public Sport addSport(@RequestBody Sport sport) {
         return sportRepository.save(sport);
     }
-
 
     @PutMapping("/sports/{id}")
     public ResponseEntity<?> updateSport(
@@ -192,6 +199,7 @@ public class AdminController {
         return ResponseEntity.ok(sport);
     }
 
+    // Supprime un sport
     @DeleteMapping("/sports/{id}")
     public ResponseEntity<?> deleteSport(@PathVariable Long id) {
         Optional<Sport> sportOptional = sportRepository.findById(id);
