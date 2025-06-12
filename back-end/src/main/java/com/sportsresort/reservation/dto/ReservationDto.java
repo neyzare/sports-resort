@@ -14,4 +14,5 @@ public class ReservationDto {
     private LocalDateTime endTime;
     private String sport;
     private boolean annulee;
+    private String coachName;
 }
