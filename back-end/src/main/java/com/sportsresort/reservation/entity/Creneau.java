@@ -23,7 +23,7 @@ public class Creneau {
     private LocalTime startTime;
     private LocalTime endTime;
 
-    private int cours;
+    private int court;
 
     @ManyToOne
     private Sport sport;
