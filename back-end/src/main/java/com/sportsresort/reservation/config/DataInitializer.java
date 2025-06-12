@@ -31,41 +31,57 @@ public class DataInitializer {
     @Bean
     public CommandLineRunner initData() {
         return args -> {
-            // Créer les rôles si absents
+            // Rôles
             Role adminRole = createRoleIfNotExists("ADMIN");
             Role coachRole = createRoleIfNotExists("COACH");
             Role userRole = createRoleIfNotExists("USER");
 
-            // Créer utilisateurs
+            // Sports
+            Sport tennis = createSportIfNotExists("Tennis", "Sport de raquette classique", "/uploads/sports/default-tennis.png", "https://fr.wikipedia.org/wiki/Tennis", "🎾");
+            Sport yoga = createSportIfNotExists("Yoga", "Discipline du corps et de l'esprit", "/uploads/sports/default-yoga.png", "https://fr.wikipedia.org/wiki/Yoga", "🧘");
+
+            // Coach avec sports
+            User coach = userRepository.findByEmail("coach@test.com").orElseGet(() -> {
+                User newCoach = User.builder()
+                        .email("coach@test.com")
+                        .password(passwordEncoder.encode("coach"))
+                        .firstname("Coach")
+                        .lastname("Test")
+                        .dateofbirth("1985-05-10")
+                        .country("France")
+                        .city("Lyon")
+                        .zipcode("69000")
+                        .phonenumber("0612345678")
+                        .roles(Set.of(coachRole))
+                        .sports(Set.of(tennis, yoga))
+                        .build();
+                return userRepository.save(newCoach);
+            });
+
+            // Admin
             createUserIfNotExists("admin@test.com", "admin", "Admin", "Test", Set.of(adminRole));
-            User coach = createUserIfNotExists("coach@test.com", "coach", "Coach", "Test", Set.of(coachRole));
+            // Utilisateur
             createUserIfNotExists("user@test.com", "user", "User", "Test", Set.of(userRole));
 
-            // Créer sport si non existant
-            Sport tennis = createSportIfNotExists("Tennis", "Sport de raquette classique", "/uploads/sports/default-tennis.png", "https://fr.wikipedia.org/wiki/Tennis", "🎾");
-
-            // Créer créneaux si aucun
+            // Créneaux
             if (creneauRepository.count() == 0) {
-                Creneau c1 = Creneau.builder()
+                creneauRepository.save(Creneau.builder()
                         .sport(tennis)
                         .coach(coach)
                         .date(LocalDate.now().plusDays(1))
                         .startTime(LocalTime.of(10, 0))
                         .endTime(LocalTime.of(11, 0))
                         .placesDispo(10)
-                        .build();
+                        .build());
 
-                Creneau c2 = Creneau.builder()
-                        .sport(tennis)
+                creneauRepository.save(Creneau.builder()
+                        .sport(yoga)
                         .coach(coach)
                         .date(LocalDate.now().plusDays(2))
                         .startTime(LocalTime.of(18, 0))
                         .endTime(LocalTime.of(19, 0))
                         .placesDispo(12)
-                        .build();
-
-                creneauRepository.save(c1);
-                creneauRepository.save(c2);
+                        .build());
             }
         };
     }
@@ -82,6 +98,11 @@ public class DataInitializer {
                     .password(passwordEncoder.encode(rawPassword))
                     .firstname(firstname)
                     .lastname(lastname)
+                    .dateofbirth("1990-01-01")
+                    .country("France")
+                    .city("Paris")
+                    .zipcode("75000")
+                    .phonenumber("0600000000")
                     .roles(roles)
                     .build();
             return userRepository.save(user);
