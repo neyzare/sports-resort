@@ -13,14 +13,16 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    private Role role;
 
     private String firstname;
     private String lastname;
     private String email;
-    private String address;
     private String password;
+    private String dateofbirth;
+    private String country;
+    private String city;
+    private String zipcode;
+    private String phonenumber;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

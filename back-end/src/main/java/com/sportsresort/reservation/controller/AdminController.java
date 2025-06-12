@@ -23,6 +23,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -44,24 +46,58 @@ public class AdminController {
     }
 
     @PostMapping("/users")
-    public User addUser(@RequestBody User user) {
+    public ResponseEntity<?> addUser(@RequestBody User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+
+        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+            List<Role> rolesFromDb = roleRepository.findAll();
+            Set<Role> userRoles = rolesFromDb.stream()
+                    .filter(roleFromDb -> user.getRoles().stream()
+                            .anyMatch(inputRole -> inputRole.getName().equalsIgnoreCase(roleFromDb.getName())))
+                    .collect(Collectors.toSet());
+            user.setRoles(userRoles);
+        }
+
+        User savedUser = userRepository.save(user);
+        return ResponseEntity.ok(savedUser);
     }
 
     @PutMapping("/users/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User updated) {
-        User user = userRepository.findById(id).orElseThrow();
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User updated) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User user = optionalUser.get();
+
         user.setFirstname(updated.getFirstname());
         user.setLastname(updated.getLastname());
         user.setEmail(updated.getEmail());
-        user.setAddress(updated.getAddress());
+        user.setCity(updated.getCity());
+        user.setCountry(updated.getCountry());
+        user.setDateofbirth(updated.getDateofbirth());
+        user.setPhonenumber(updated.getPhonenumber());
+        user.setZipcode(updated.getZipcode());
+
         if (updated.getPassword() != null && !updated.getPassword().isBlank()) {
             user.setPassword(passwordEncoder.encode(updated.getPassword()));
         }
 
-        return userRepository.save(user);
+        if (updated.getRoles() != null && !updated.getRoles().isEmpty()) {
+            // Assigner uniquement les rôles valides existants en BDD
+            List<Role> allRoles = roleRepository.findAll();
+            Set<Role> matchedRoles = allRoles.stream()
+                .filter(dbRole -> updated.getRoles().stream()
+                    .anyMatch(inputRole -> inputRole.getName().equalsIgnoreCase(dbRole.getName())))
+                .collect(Collectors.toSet());
+            user.setRoles(matchedRoles);
+        }
+
+        User savedUser = userRepository.save(user);
+        return ResponseEntity.ok(savedUser);
     }
+
 
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable Long id) {

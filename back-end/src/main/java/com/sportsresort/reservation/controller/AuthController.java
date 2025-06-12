@@ -63,9 +63,13 @@ public class AuthController {
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
-                .address(request.getAddress())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .roles(Collections.singleton(userRole))
+                .dateofbirth(request.getDateofbirth())
+                .country(request.getCountry())
+                .city(request.getCity())
+                .zipcode(request.getZipcode())
+                .phonenumber(request.getPhonenumber())
                 .build();
 
         userRepository.save(newUser);
