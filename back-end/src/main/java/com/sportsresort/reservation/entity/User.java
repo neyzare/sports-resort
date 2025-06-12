@@ -24,6 +24,14 @@ public class User {
     private String zipcode;
     private String phonenumber;
 
+    @ManyToMany
+    @JoinTable(
+        name = "coach_sports",
+        joinColumns = @JoinColumn(name = "coach_id"),
+        inverseJoinColumns = @JoinColumn(name = "sport_id")
+    )
+    private Set<Sport> sports;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_roles",

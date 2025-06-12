@@ -31,7 +31,12 @@ public class UserReservationController {
 
     @Data
     public static class ReservationRequest {
-        private Long coachId; // optionnel
+        private Long coachId;
+    }
+
+    @GetMapping("/coachs/sport/{sportId}")
+    public List<User> getCoachesBySport(@PathVariable Long sportId) {
+        return userRepository.findCoachesBySportId(sportId);
     }
 
     @PostMapping("/reserver/{creneauId}")
