@@ -18,5 +18,8 @@ public class Reservation {
     @ManyToOne
     private Creneau creneau;
 
-    private boolean annulee = false;
+    @ManyToOne
+    private User coach;
+
+    private boolean annulee;
 }

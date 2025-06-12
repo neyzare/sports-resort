@@ -1,5 +1,6 @@
 package com.sportsresort.reservation.controller;
 
+import com.sportsresort.reservation.dto.CoachDto;
 import com.sportsresort.reservation.dto.ReservationDto;
 import com.sportsresort.reservation.entity.Creneau;
 import com.sportsresort.reservation.entity.Reservation;
@@ -7,8 +8,11 @@ import com.sportsresort.reservation.entity.User;
 import com.sportsresort.reservation.repository.CreneauRepository;
 import com.sportsresort.reservation.repository.ReservationRepository;
 import com.sportsresort.reservation.repository.UserRepository;
+
 import jakarta.transaction.Transactional;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +29,16 @@ public class UserReservationController {
     private final CreneauRepository creneauRepository;
     private final ReservationRepository reservationRepository;
 
+    @Data
+    public static class ReservationRequest {
+        private Long coachId; // optionnel
+    }
+
     @PostMapping("/reserver/{creneauId}")
     public String reserver(@AuthenticationPrincipal UserDetails userDetails,
-                           @PathVariable Long creneauId) {
+                           @PathVariable Long creneauId,
+                           @RequestBody(required = false) ReservationRequest request) {
+
         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
         Creneau creneau = creneauRepository.findById(creneauId).orElseThrow();
 
@@ -35,9 +46,15 @@ public class UserReservationController {
             return "Ce créneau est déjà réservé.";
         }
 
+        User coach = null;
+        if (request != null && request.getCoachId() != null) {
+            coach = userRepository.findById(request.getCoachId()).orElse(null);
+        }
+
         Reservation reservation = Reservation.builder()
                 .user(user)
                 .creneau(creneau)
+                .coach(coach)
                 .annulee(false)
                 .build();
 
@@ -46,7 +63,7 @@ public class UserReservationController {
         creneau.setDisponible(false);
         creneauRepository.save(creneau);
 
-        return "Réservation réussie.";
+        return "Réservation réussie" + (coach != null ? " avec coach." : ".");
     }
 
     @GetMapping("/mes-reservations")
@@ -60,8 +77,9 @@ public class UserReservationController {
                         .creneauId(r.getCreneau().getId())
                         .startTime(r.getCreneau().getStartTime())
                         .endTime(r.getCreneau().getEndTime())
-                        .sport(r.getCreneau().getSport())
+                        .sport(r.getCreneau().getSport().getName())
                         .annulee(r.isAnnulee())
+                        .coachName(r.getCoach() != null ? r.getCoach().getFirstname() : null)
                         .build())
                 .collect(Collectors.toList());
     }
@@ -88,6 +106,13 @@ public class UserReservationController {
     public List<Creneau> getCreneauxDisponibles() {
         return creneauRepository.findAll().stream()
                 .filter(Creneau::isDisponible)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/coachs")
+    public List<CoachDto> getAllCoachs() {
+        return userRepository.findByRoleName("COACH").stream()
+                .map(coach -> new CoachDto(coach.getId(), coach.getFirstname()))
                 .collect(Collectors.toList());
     }
 }
