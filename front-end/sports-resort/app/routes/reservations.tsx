@@ -174,7 +174,8 @@ export default function Reservations() {
                                                     formatedDate={formattedDate}
                                                     heure={reservation.startTime}
                                                     role={role}
-                                                    email={userEmail}
+                                                    email={reservation.email}
+                                                    userEmail={userEmail}
                                                 />
                                                 );
                                             } else {
@@ -185,7 +186,7 @@ export default function Reservations() {
                                                     formatedDate={formattedDate}
                                                     heure={slot}
                                                     role={role}
-                                                    email={userEmail}
+                                                    userEmail={userEmail}
                                                 />
                                                 );
                                             }

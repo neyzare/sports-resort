@@ -4,15 +4,32 @@ import { useEffect, useState } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { BarsArrowUpIcon } from '@heroicons/react/24/outline'
 import { getUserEmailFromToken, getUserRoleFromToken } from '~/lib/auth';
+import axios from 'axios';
 
-export default function ReservationPopUp({ role, type, index, formatedDate, date, heure, email }: { role: string | null, type: string, index: number, formatedDate?: string, date?: string, heure: string, email: string | null }) {
+const API_BASE = 'http://localhost:8080/api/';
+
+export default function ReservationPopUp({ role, type, index, formatedDate, date, heure, userEmail, email }: { role: string | null, type: string, index: number, formatedDate?: string, date?: string, heure: string, userEmail: string | null, email: string | null }) {
   const [open, setOpen] = useState(false);
   const [selectedHeure, setSelectedHeure] = useState<string>();
+  const [reservationType, setReservationType] = useState<'solo' | 'coach'>('solo');
+  const [sports, setSports] = useState([]);
 
-  // Attention à supprimer et mettre dans les cookies ou localStorage
-  // const [userEmail, setUserEmail] = useState("pablodeteba@icloud.com");
+  useEffect(() => {
+    loadSports();
+  }, []);
 
-  console.log(date);
+  const loadSports = async () => {
+    try {
+      const [sRes] = await Promise.all([
+        axios.get(`${API_BASE}/sports`),
+      ]);
+      setSports(sRes.data);
+    } catch (e) {
+      console.error('Erreur fetch:', e);
+    }
+  };
+
+  console.log(sports);
 
   return (
     <div>
@@ -31,7 +48,6 @@ export default function ReservationPopUp({ role, type, index, formatedDate, date
           onClick={() => setOpen(true)}
           className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-70 hover:opacity-100 duration-200 ease-in-out"
         >
-          {/* Data à changer */}
           🎾 User
         </button>
       )}
@@ -41,7 +57,6 @@ export default function ReservationPopUp({ role, type, index, formatedDate, date
           onClick={() => setOpen(true)}
           className=" w-full border-blue text-blue border-2 rounded-border px-6 py-2 uppercase font-bold m-1 opacity-70 hover:opacity-100 duration-200 ease-in-out"
         >
-          {/* Data à changer */}
           🎾 Coach
         </button>
       )}
@@ -125,24 +140,75 @@ export default function ReservationPopUp({ role, type, index, formatedDate, date
                       </DialogTitle>
                       <div className="mt-2">
                           <div className="flex-grow">
-                            <p>{formatedDate}</p>
-                            <p>Heure : {selectedHeure}</p>
+                            <p className='block text-gray-700 text-xsmall font-bold mb-2'>{formatedDate} à {selectedHeure}</p>
                             <input hidden name='date' value={date} />
                             <input hidden name='heure' value={selectedHeure} />
 
                             <label className="block text-gray-700 text-xsmall font-bold mb-2" htmlFor="sport">
                               Choix du sport
                             </label>
-                            <select name="sport" id="" className="border border-border rounded-border w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <select name="sport" id="" className="border border-border rounded-border w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" defaultValue="">
+                              <option value="" disabled>
+                                Sélectionnez un sport
+                              </option>
                               <option value="tennis">Tennis</option>
                               <option value="football">Football</option>
                             </select>
-                          </div>
-                          <div className="flex-grow">
-                            <label className="block text-gray-700 text-xsmall font-bold mb-2" htmlFor="sport">
-                              Type de réservation
-                            </label>
-                            <input type="radio" />
+
+                            <fieldset>
+                              <legend className="block text-gray-700 text-xsmall font-bold mb-2">
+                                Type de réservation
+                              </legend>
+
+                              <div className="flex items-center mb-2">
+                                <input
+                                  id="reservation-solo"
+                                  type="radio"
+                                  name="reservationType"
+                                  value="solo"
+                                  defaultChecked
+                                  checked={reservationType === 'solo'}
+                                  onChange={() => setReservationType('solo')}
+                                  className="h-4 w-4 text-blue focus:ring-blue border-gray-300"
+                                />
+                                <label htmlFor="reservation-solo" className="ml-2 block text-gray-700 text-xsmall">
+                                  Solo
+                                </label>
+                              </div>
+
+                              <div className="flex items-center mb-4">
+                                <input
+                                  id="reservation-coach"
+                                  type="radio"
+                                  name="reservationType"
+                                  value="coach"
+                                  checked={reservationType === 'coach'}
+                                  onChange={() => setReservationType('coach')}
+                                  className="h-4 w-4 text-blue focus:ring-blue border-gray-300"
+                                />
+                                <label htmlFor="reservation-coach" className="ml-2 block text-gray-700 text-xsmall ">
+                                  Avec coach
+                                </label>
+                              </div>
+                            </fieldset>
+
+                            {reservationType === 'coach' && (
+                              <>
+                                <label className="block text-gray-700 text-xsmall font-bold mb-2">
+                                  Choix du coach
+                                </label>
+                                <select
+                                  name="coach"
+                                  className="border border-border rounded-border w-full py-2 px-3 mb-4"
+                                  defaultValue=""
+                                >
+                                  <option value="" disabled>
+                                    Sélectionnez un coach
+                                  </option>
+                                  <option value="guigui">Guigui</option>
+                                </select>
+                              </>
+                            )}
                           </div>
                       </div>
                     </div>
