@@ -36,7 +36,6 @@ public class UserController {
         user.setFirstname(updated.getFirstname());
         user.setLastname(updated.getLastname());
         user.setEmail(updated.getEmail());
-        user.setAddress(updated.getAddress());
         
         if (updated.getPassword() != null && !updated.getPassword().isBlank()) {
             user.setPassword(passwordEncoder.encode(updated.getPassword()));
