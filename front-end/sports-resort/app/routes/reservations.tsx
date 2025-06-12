@@ -18,7 +18,6 @@ import axios from 'axios'
 const API_BASE = 'http://localhost:8080/api/creneaux'
 
 export default function Reservations() {
-  /* ----------------------------- états globaux ----------------------------- */
   const [selected, setSelected] = useState<Date>(() => new Date())
 
   const [court1, setCourt1] = useState<any[]>([])
@@ -31,7 +30,6 @@ export default function Reservations() {
   const [role, setRole] = useState<string | null>(null)
   const [userEmail, setUserEmail] = useState<string | null>(null)
 
-  /* ------------------------------ format dates ----------------------------- */
   const formattedDate =
     selected?.toLocaleDateString('fr-FR', {
       weekday: 'long',
@@ -47,7 +45,6 @@ export default function Reservations() {
   const isToday =
     startOfDay(selected).getTime() === startOfDay(new Date()).getTime()
 
-  /* ------------------------------- navigate J-1 / J+1 ------------------------------- */
   const goToPreviousDay = () => {
     if (!isLogged || isToday) return
     setSelected((prev) => {
@@ -66,7 +63,6 @@ export default function Reservations() {
     })
   }
 
-  /* ----------------------------- auth + infos user ----------------------------- */
   useEffect(() => {
     setIsLogged(isAuthenticated())
     setRole(getUserRoleFromToken())
@@ -74,7 +70,6 @@ export default function Reservations() {
     setToken(localStorage.getItem('jwt'))
   }, [])
 
-  /* --------------------------- récupération créneaux --------------------------- */
   useEffect(() => {
     if (!token) return
     const headers = { Authorization: `Bearer ${token}` }
@@ -97,29 +92,31 @@ export default function Reservations() {
     })()
   }, [token, formattedISODate])
 
-  /* --------------------------- créneaux 08h-19h --------------------------- */
   const timeSlots = Array.from({ length: 12 }, (_, i) =>
     `${String(i + 8).padStart(2, '0')}:00`,
   )
 
-  /* --------------------------------- render --------------------------------- */
   return (
     <>
       <Header />
 
-      {/* ---------- Bandeau hero ---------- */}
       <section className="relative bg-blue text-white overflow-hidden">
         <div className="h-auto text-center py-12">
-          <h1 className="text-heading1 font-bold max-w-xl mx-auto">
-            Réservation de créneaux de sports
-          </h1>
+            <h1 className="text-heading1 font-bold max-w-xl mx-auto text-white">Réservation de créneaux de sports</h1>
         </div>
-        {/* …images décoratives et wave svg si besoin… */}
+
+        <div className="w-full overflow-hidden leading-[0] bg-white">Add commentMore actions
+            <svg className="relative block w-full h-[60px]" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1200 120">
+            <path d="M1200,0 L0,0 L1200,120 Z" className="fill-blue" />
+            </svg>
+        </div>
+        <img src="../../medias/images/sport-icons/baseball.png" alt="" className="absolute w-1/12 top-10 left-60"/>
+        <img src="../../medias/images/sport-icons/foot.png" alt="" className="absolute w-1/12 bottom-15 left-[-40px]"/>
+        <img src="../../medias/images/sport-icons/volley.png" alt="" className="absolute w-1/20 bottom-10 right-50"/>
+        <img src="../../medias/images/sport-icons/basket.png" alt="" className="absolute w-1/12 rotate-20 top-2 right-5"/>
       </section>
 
-      {/* ---------- Corps ---------- */}
       <section className="flex w-full my-container py-12 px-2 gap-4">
-        {/* ---------- Calendrier ---------- */}
         <div className="bg-white flex-grow-0">
           <h3 className="text-center font-bold uppercase py-3">calendrier</h3>
           <div className="bg-light-white rounded-border px-4 py-6 border border-border">
@@ -140,9 +137,7 @@ export default function Reservations() {
           </div>
         </div>
 
-        {/* ---------- Colonne créneaux ---------- */}
         <div className="flex-grow">
-          {/* entête date + flèches */}
           <div className="flex gap-2 py-3 justify-center items-center">
             <a onClick={goToPreviousDay}>
               <svg
@@ -179,11 +174,9 @@ export default function Reservations() {
             </a>
           </div>
 
-          {/* tableau créneaux */}
           <div className="bg-light-white rounded-border px-8 py-6 border border-border flex gap-4">
             {isLogged ? (
               <>
-                {/* colonne heures */}
                 <div className="w-fit pt-6">
                   {Array.from({ length: 13 }).map((_, i) => (
                     <p key={i} className="mb-7 font-bold uppercase">
@@ -192,7 +185,6 @@ export default function Reservations() {
                   ))}
                 </div>
 
-                {/* ---------- COURT I (seul court implémenté pour l’instant) ---------- */}
                 <div className="flex flex-col text-center flex-grow">
                   <h3 className="mb-3 font-bold uppercase">Court I</h3>
 
@@ -283,7 +275,6 @@ export default function Reservations() {
                 </div>
               </>
             ) : (
-              /* ---------- message « non connecté » ---------- */
               <div className="flex flex-col mx-auto gap-y-4">
                 <p>
                   Pour pouvoir accéder aux réservations merci de vous connecter.
