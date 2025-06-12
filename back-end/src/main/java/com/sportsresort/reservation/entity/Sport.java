@@ -1,5 +1,6 @@
 package com.sportsresort.reservation.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,8 +20,10 @@ public class Sport {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String name;
+  @Column(columnDefinition = "TEXT")
   private String description;
   private String imageUrl;
   private String lien;
+  @Column(columnDefinition = "VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin")
   private String emojie;
 }
