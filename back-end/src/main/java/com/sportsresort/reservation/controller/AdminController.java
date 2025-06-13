@@ -9,6 +9,7 @@ import com.sportsresort.reservation.repository.RoleRepository;
 import com.sportsresort.reservation.repository.SportRepository;
 import com.sportsresort.reservation.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,14 +17,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -38,7 +37,15 @@ public class AdminController {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
 
-    private final String uploadDir = "/Users/lucas/Desktop/sport-resort/sports-resort/back-end/src/main/java/com/sportsresort/uploads/sports";
+    @Value("${app.upload.sport-dir:src/main/resources/static/uploads/sports}")
+    private String uploadDirStr;
+    private Path uploadDir;
+
+    @PostConstruct
+    public void initUploadDir() throws IOException {
+        this.uploadDir = Paths.get(uploadDirStr);
+        Files.createDirectories(uploadDir);
+    }
 
     @GetMapping("/users")
     public List<User> getAllUsers() {
@@ -57,11 +64,11 @@ public class AdminController {
                     .collect(Collectors.toSet());
             user.setRoles(userRoles);
         }
+
         if (user.getSports() != null && !user.getSports().isEmpty()) {
             Set<Sport> validSports = sportRepository.findAllById(
-                user.getSports().stream().map(Sport::getId).toList()
+                    user.getSports().stream().map(Sport::getId).toList()
             ).stream().collect(Collectors.toSet());
-
             user.setSports(validSports);
         }
 
@@ -77,7 +84,6 @@ public class AdminController {
         }
 
         User user = optionalUser.get();
-
         user.setFirstname(updated.getFirstname());
         user.setLastname(updated.getLastname());
         user.setEmail(updated.getEmail());
@@ -94,23 +100,22 @@ public class AdminController {
         if (updated.getRoles() != null && !updated.getRoles().isEmpty()) {
             List<Role> allRoles = roleRepository.findAll();
             Set<Role> matchedRoles = allRoles.stream()
-                .filter(dbRole -> updated.getRoles().stream()
-                    .anyMatch(inputRole -> inputRole.getName().equalsIgnoreCase(dbRole.getName())))
-                .collect(Collectors.toSet());
+                    .filter(dbRole -> updated.getRoles().stream()
+                            .anyMatch(inputRole -> inputRole.getName().equalsIgnoreCase(dbRole.getName())))
+                    .collect(Collectors.toSet());
             user.setRoles(matchedRoles);
         }
-        if (user.getSports() != null && !user.getSports().isEmpty()) {
-            Set<Sport> validSports = sportRepository.findAllById(
-                user.getSports().stream().map(Sport::getId).toList()
-            ).stream().collect(Collectors.toSet());
 
+        if (updated.getSports() != null && !updated.getSports().isEmpty()) {
+            Set<Sport> validSports = sportRepository.findAllById(
+                    updated.getSports().stream().map(Sport::getId).toList()
+            ).stream().collect(Collectors.toSet());
             user.setSports(validSports);
         }
 
         User savedUser = userRepository.save(user);
         return ResponseEntity.ok(savedUser);
     }
-
 
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable Long id) {
@@ -151,9 +156,6 @@ public class AdminController {
             @RequestParam("image") MultipartFile image) {
 
         try {
-            File dir = new File(uploadDir);
-            if (!dir.exists()) dir.mkdirs();
-
             String rawFilename = image.getOriginalFilename();
             String originalFilename = StringUtils.cleanPath(rawFilename != null ? rawFilename : "uploaded_image");
             String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
@@ -161,7 +163,7 @@ public class AdminController {
             String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
             String finalFileName = baseName + "_" + timestamp + extension;
 
-            Path filePath = Paths.get(uploadDir, finalFileName);
+            Path filePath = uploadDir.resolve(finalFileName);
             Files.write(filePath, image.getBytes());
 
             String imageUrl = "/uploads/sports/" + finalFileName;
@@ -180,16 +182,6 @@ public class AdminController {
         } catch (IOException e) {
             return ResponseEntity.status(500).body("Erreur lors de l'upload de l'image : " + e.getMessage());
         }
-    }
-
-    @GetMapping("/sports")
-    public List<Sport> getAllSports() {
-        return sportRepository.findAll();
-    }
-
-    @PostMapping("/sports")
-    public Sport addSport(@RequestBody Sport sport) {
-        return sportRepository.save(sport);
     }
 
     @PutMapping("/sports/{id}")
@@ -215,8 +207,9 @@ public class AdminController {
         if (image != null && !image.isEmpty()) {
             try {
                 if (sport.getImageUrl() != null) {
-                    String oldImagePath = uploadDir + sport.getImageUrl().replace("/uploads/sports/", "");
-                    Files.deleteIfExists(Paths.get(oldImagePath));
+                    String oldImageName = sport.getImageUrl().replace("/uploads/sports/", "");
+                    Path oldImagePath = uploadDir.resolve(oldImageName);
+                    Files.deleteIfExists(oldImagePath);
                 }
 
                 String originalFilename = StringUtils.cleanPath(image.getOriginalFilename());
@@ -225,11 +218,10 @@ public class AdminController {
                 String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
                 String finalFileName = baseName + "_" + timestamp + extension;
 
-                Path filePath = Paths.get(uploadDir, finalFileName);
+                Path filePath = uploadDir.resolve(finalFileName);
                 Files.write(filePath, image.getBytes());
 
-                String imageUrl = "/uploads/sports/" + finalFileName;
-                sport.setImageUrl(imageUrl);
+                sport.setImageUrl("/uploads/sports/" + finalFileName);
 
             } catch (IOException e) {
                 return ResponseEntity.status(500).body("Erreur lors de l'upload de la nouvelle image : " + e.getMessage());
@@ -249,9 +241,10 @@ public class AdminController {
 
         Sport sport = sportOptional.get();
         if (sport.getImageUrl() != null) {
-            String imagePath = uploadDir + sport.getImageUrl().replace("/uploads/sports/", "");
             try {
-                Files.deleteIfExists(Paths.get(imagePath));
+                String fileName = sport.getImageUrl().replace("/uploads/sports/", "");
+                Path imagePath = uploadDir.resolve(fileName);
+                Files.deleteIfExists(imagePath);
             } catch (IOException e) {
                 return ResponseEntity.status(500).body("Erreur lors de la suppression de l'image.");
             }
@@ -259,6 +252,16 @@ public class AdminController {
 
         sportRepository.deleteById(id);
         return ResponseEntity.ok("Sport supprimé.");
+    }
+
+    @GetMapping("/sports")
+    public List<Sport> getAllSports() {
+        return sportRepository.findAll();
+    }
+
+    @PostMapping("/sports")
+    public Sport addSport(@RequestBody Sport sport) {
+        return sportRepository.save(sport);
     }
 
     @GetMapping("/roles")
