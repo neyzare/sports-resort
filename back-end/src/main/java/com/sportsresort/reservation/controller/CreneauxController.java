@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -34,4 +35,15 @@ public class CreneauxController {
 
         return creneauRepository.findAllByDateAndCourt(date, court);
     }
+
+    @GetMapping("/{id}")
+    public Creneau getCreneauById(@PathVariable Long id) {
+        return creneauRepository.findById(id).orElseThrow(() -> new RuntimeException("Creneaux non trouvé"));
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteCreneau(@PathVariable Long id) {
+        creneauRepository.deleteById(id);
+    }
+    
 }
