@@ -14,6 +14,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/creneaux")
@@ -22,12 +25,17 @@ public class CreneauxController {
 
     private final CreneauRepository creneauRepository;
 
-    @GetMapping
+    @GetMapping("/creneaux")
     public List<Creneau> getAllCreneaux() {
         return creneauRepository.findAll();
     }
 
-    @GetMapping("/{date}/{court}")
+    @GetMapping("/{id}")
+    public Creneau getCreneauById(@PathVariable Long id) {
+        return creneauRepository.findById(id).orElseThrow(() -> new RuntimeException("Creneaux non trouvé"));
+    }
+
+    @GetMapping("/creneaux/{date}/{court}")
     public List<Creneau> getCreneauxByDateAndCourt(
             @PathVariable
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
@@ -36,14 +44,23 @@ public class CreneauxController {
         return creneauRepository.findAllByDateAndCourt(date, court);
     }
 
-    @GetMapping("/{id}")
-    public Creneau getCreneauById(@PathVariable Long id) {
-        return creneauRepository.findById(id).orElseThrow(() -> new RuntimeException("Creneaux non trouvé"));
+    @PostMapping("/creneaux")
+    public Creneau addCreneau(@RequestBody Creneau creneau) {
+        return creneauRepository.save(creneau);
+    }
+
+    @PutMapping("/{id}")
+    public Creneau updateCreneau(@PathVariable Long id, @RequestBody Creneau updated) {
+        Creneau creneau = creneauRepository.findById(id).orElseThrow();
+        creneau.setStartTime(updated.getStartTime());
+        creneau.setEndTime(updated.getEndTime());
+        creneau.setSport(updated.getSport());
+        creneau.setCoach(updated.getCoach());
+        return creneauRepository.save(creneau);
     }
 
     @DeleteMapping("/{id}")
     public void deleteCreneau(@PathVariable Long id) {
         creneauRepository.deleteById(id);
     }
-    
 }
