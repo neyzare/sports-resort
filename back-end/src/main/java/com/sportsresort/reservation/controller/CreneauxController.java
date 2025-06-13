@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping("/api/creneaux")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class CreneauxController {
 
@@ -28,11 +28,6 @@ public class CreneauxController {
     @GetMapping("/creneaux")
     public List<Creneau> getAllCreneaux() {
         return creneauRepository.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public Creneau getCreneauById(@PathVariable Long id) {
-        return creneauRepository.findById(id).orElseThrow(() -> new RuntimeException("Creneaux non trouvé"));
     }
 
     @GetMapping("/creneaux/{date}/{court}")
@@ -49,7 +44,7 @@ public class CreneauxController {
         return creneauRepository.save(creneau);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/creneaux/{id}")
     public Creneau updateCreneau(@PathVariable Long id, @RequestBody Creneau updated) {
         Creneau creneau = creneauRepository.findById(id).orElseThrow();
         creneau.setStartTime(updated.getStartTime());
@@ -59,7 +54,7 @@ public class CreneauxController {
         return creneauRepository.save(creneau);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/creneaux/{id}")
     public void deleteCreneau(@PathVariable Long id) {
         creneauRepository.deleteById(id);
     }
