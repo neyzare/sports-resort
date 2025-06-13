@@ -2,16 +2,36 @@ import Footer from "~/components/layout/Footer";
 import Header from "~/components/layout/Header";
 import Button from "~/components/styles/Button";
 import Hero from "~/components/styles/Hero";
-import React, { useRef, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useSwiper } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/24/solid'
 import { Pagination, Autoplay, Navigation } from 'swiper/modules';
+import axios from 'axios';
 
 export default function Accueil() {
+  const API_BASE = 'http://localhost:8080/api/sports';
   const swiperRef = useRef();
+  const [sports, setSports] = useState<Sport[]>([]);
+
+  useEffect(() => {
+    loadSports();
+  }, []);
+
+  const loadSports = async () => {
+    try {
+      const [sRes] = await Promise.all([
+        axios.get(`${API_BASE}`)
+      ]);
+      setSports(sRes.data);
+    } catch (e) {
+      console.error('Erreur fetch:', e);
+    }
+  }
+
+  console.log(sports)
 
   const dataHero = {
     title: "Réserve ta séance en quelques clics",
@@ -65,23 +85,22 @@ export default function Accueil() {
               modules={[Autoplay, Navigation]}
               className="mySwiper h-60 w-auto cursor-e-resize"
             >
-
-              {[...Array(6)].map((_, index) => (
+              {sports.map((sport, index) => (
                 <SwiperSlide
                   key={index}
                   className="rounded-border h-20 group bg-cover text-white"
                   style={{
-                    backgroundImage: "url(/medias/images/tennis.webp)",
+                    backgroundImage: `url(${sport.imageUrl})`,
                   }}
                 >
                   <div className="relative h-full w-full rounded-border bg-gradient-to-b to-black/70 lg:bg-none lg:hover:bg-gradient-to-b lg:hover:to-black/70">
                     <h3 className="text-heading3 absolute bottom-7 left-7 lg:hidden lg:group-hover:block font-bold">
-                      Tennis
+                      {sport.name}
                     </h3>
                     <Button
                       name="En savoir plus"
                       className="absolute bottom-4 right-4 hover:text-white lg:hidden lg:group-hover:block normal-case"
-                      href="/"
+                      href={`sports${sport.lien}`}
                     />
                   </div>
                 </SwiperSlide>
