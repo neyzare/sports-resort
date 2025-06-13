@@ -28,7 +28,7 @@ export default function Reservations() {
   const [token, setToken] = useState<string | null>(null)
   const [isLogged, setIsLogged] = useState(false)
   const [role, setRole] = useState<string | null>(null)
-  const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   const formattedDate =
     selected?.toLocaleDateString('fr-FR', {
@@ -194,7 +194,7 @@ export default function Reservations() {
 
                   {timeSlots.map((slot, index) => {
                     const creneau = court1.find(
-                      (c: any) => c.startTime.slice(0, 5) === slot,
+                      (c: any) => c?.startTime?.slice(0, 5) === slot,
                     )
 
                     return (
@@ -207,6 +207,7 @@ export default function Reservations() {
                         dateLong={formattedDate}
                         heure={slot}
                         creneau={creneau}
+                        court={1}
                         onUpdate={fetchCreneaux}
                       />
                     )
@@ -217,7 +218,7 @@ export default function Reservations() {
 
                   {timeSlots.map((slot, index) => {
                     const creneau = court2.find(
-                      (c: any) => c.startTime.slice(0, 5) === slot,
+                      (c: any) => c?.startTime?.slice(0, 5) === slot,
                     )
 
                     return (
@@ -230,6 +231,7 @@ export default function Reservations() {
                         dateLong={formattedDate}
                         heure={slot}
                         creneau={creneau}
+                        court={2}
                         onUpdate={fetchCreneaux}
                       />
                     )
@@ -240,7 +242,7 @@ export default function Reservations() {
 
                   {timeSlots.map((slot, index) => {
                     const creneau = court3.find(
-                      (c: any) => c.startTime.slice(0, 5) === slot,
+                      (c: any) => c?.startTime?.slice(0, 5) === slot,
                     )
 
                     return (
@@ -253,6 +255,7 @@ export default function Reservations() {
                         dateLong={formattedDate}
                         heure={slot}
                         creneau={creneau}
+                        court={3}
                         onUpdate={fetchCreneaux}
                       />
                     )
@@ -263,7 +266,7 @@ export default function Reservations() {
 
                   {timeSlots.map((slot, index) => {
                     const creneau = court4.find(
-                      (c: any) => c.startTime.slice(0, 5) === slot,
+                      (c: any) => c?.startTime?.slice(0, 5) === slot,
                     )
 
                     return (
@@ -276,6 +279,7 @@ export default function Reservations() {
                         dateLong={formattedDate}
                         heure={slot}
                         creneau={creneau}
+                        court={4}
                         onUpdate={fetchCreneaux}
                       />
                     )

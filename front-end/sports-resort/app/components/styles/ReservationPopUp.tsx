@@ -9,6 +9,7 @@ import {
 } from '@headlessui/react'
 import { BarsArrowUpIcon } from '@heroicons/react/24/outline'
 import axios from 'axios'
+import { getUserIdFromToken } from '~/lib/auth'
 
 type Creneau = {
   disponible: boolean
@@ -29,6 +30,8 @@ type Props = {
   dateLong: string
   heure: string
   creneau?: Creneau
+  court: number
+  sport_id: number
   onUpdate?: () => void
 }
 
@@ -42,18 +45,24 @@ export default function ReservationPopUp({
   dateLong,
   heure,
   creneau,
+  court,
   onUpdate,
 }: Props) {
   const [open, setOpen]         = useState(false)
   const [sports, setSports]     = useState<Sport[]>([])
   const [sportId, setSportId]   = useState<number | ''>('');
-  const [coachs, setCoachs]     = useState<Coach[]>([])
+  const [coachs, setCoachs]     = useState<Coach[]>([]);
+  const [coachId, setCoachId]   = useState<number | ''>('')
   const [reservationType, setReservationType] =
     useState<'solo' | 'coach'>('solo')
-  const [token, setToken]       = useState<string | null>(null)
+  const [token, setToken]       = useState<string | null>(null);
+
+  const [userId, setUserId] = useState<number | null>(null)
+
 
   useEffect(() => {
-    setToken(localStorage.getItem('jwt'))
+    const jwt = localStorage.getItem('jwt')
+    setToken(jwt)
   }, [])
 
   useEffect(() => {
@@ -87,6 +96,24 @@ export default function ReservationPopUp({
       }
     })()
   }, [sportId])
+
+  useEffect(() => {
+  if (!token || !userEmail) return
+
+  const headers = { Authorization: `Bearer ${token}` }
+
+  ;(async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/users/${userEmail}`, {
+        headers,
+      })
+      setUserId(res.data.id)
+    } catch (err) {
+      console.error('Erreur récupération userId :', err)
+    }
+  })()
+}, [token, userEmail])
+
 
   const emoji = creneau?.sport?.emojie
 
@@ -222,19 +249,23 @@ export default function ReservationPopUp({
     }
   })()
 
+  console.log(userId)
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!token) return
     const headers = { Authorization: `Bearer ${token}` }
 
     const data: any = {
+      court: court,
       date: dateISO,
-      heure,
-      sportId: (e.currentTarget.sport as any).value,
+      startTime: heure,
+      sport: { id: sportId },
+      user: {id: userId},
       type: reservationType,
     }
     if (reservationType === 'coach') {
-      data.coachId = (e.currentTarget.coach as any).value
+      data.coach = { id: coachId }
     }
 
     try {
@@ -281,7 +312,7 @@ export default function ReservationPopUp({
                       </div>
                       <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                         <DialogTitle className="text-base font-semibold text-gray-900">
-                          Réserver un court
+                          Réserver le court n°{court}
                         </DialogTitle>
 
                         <p className="mt-2 text-sm text-gray-500">
@@ -363,6 +394,7 @@ export default function ReservationPopUp({
                               required
                               className="border border-border rounded-border w-full py-2 px-3 mb-4"
                               defaultValue=""
+                              onChange={(e) => setCoachId(Number(e.target.value))}
                             >
                               <option value="" disabled>
                                 Sélectionnez un coach

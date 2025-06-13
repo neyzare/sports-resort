@@ -29,3 +29,17 @@ export const getUserEmailFromToken = (): string | null => {
     return null;
   }
 }
+
+export const getUserIdFromToken = (): number | null => {
+  const token = localStorage.getItem('jwt');
+  if (!token) return null;
+
+  try {
+    const base64Payload = token.split('.')[1];
+    const payload = JSON.parse(atob(base64Payload));
+    return payload.id || null;
+  } catch (err) {
+    console.error('Erreur de décodage du JWT :', err);
+    return null;
+  }
+};
