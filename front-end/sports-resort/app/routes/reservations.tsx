@@ -70,27 +70,31 @@ export default function Reservations() {
     setToken(localStorage.getItem('jwt'))
   }, [])
 
-  useEffect(() => {
+  const fetchCreneaux = async () => {
     if (!token) return
     const headers = { Authorization: `Bearer ${token}` }
 
-    ;(async () => {
-      try {
-        const [c1, c2, c3, c4] = await Promise.all([
-          axios.get(`${API_BASE}/${formattedISODate}/1`, { headers }),
-          axios.get(`${API_BASE}/${formattedISODate}/2`, { headers }),
-          axios.get(`${API_BASE}/${formattedISODate}/3`, { headers }),
-          axios.get(`${API_BASE}/${formattedISODate}/4`, { headers }),
-        ])
-        setCourt1(c1.data)
-        setCourt2(c2.data)
-        setCourt3(c3.data)
-        setCourt4(c4.data)
-      } catch (err) {
-        console.error('Erreur fetch :', err)
-      }
-    })()
+    try {
+      const [c1, c2, c3, c4] = await Promise.all([
+        axios.get(`${API_BASE}/${formattedISODate}/1`, { headers }),
+        axios.get(`${API_BASE}/${formattedISODate}/2`, { headers }),
+        axios.get(`${API_BASE}/${formattedISODate}/3`, { headers }),
+        axios.get(`${API_BASE}/${formattedISODate}/4`, { headers }),
+      ])
+      setCourt1(c1.data)
+      setCourt2(c2.data)
+      setCourt3(c3.data)
+      setCourt4(c4.data)
+    } catch (err) {
+      console.error('Erreur fetch :', err)
+    }
+  }
+
+
+  useEffect(() => {
+    fetchCreneaux()
   }, [token, formattedISODate])
+
 
   const timeSlots = Array.from({ length: 12 }, (_, i) =>
     `${String(i + 8).padStart(2, '0')}:00`,
@@ -203,6 +207,7 @@ export default function Reservations() {
                         dateLong={formattedDate}
                         heure={slot}
                         creneau={creneau}
+                        onUpdate={fetchCreneaux}
                       />
                     )
                   })}
@@ -225,6 +230,7 @@ export default function Reservations() {
                         dateLong={formattedDate}
                         heure={slot}
                         creneau={creneau}
+                        onUpdate={fetchCreneaux}
                       />
                     )
                   })}
@@ -247,6 +253,7 @@ export default function Reservations() {
                         dateLong={formattedDate}
                         heure={slot}
                         creneau={creneau}
+                        onUpdate={fetchCreneaux}
                       />
                     )
                   })}
@@ -269,6 +276,7 @@ export default function Reservations() {
                         dateLong={formattedDate}
                         heure={slot}
                         creneau={creneau}
+                        onUpdate={fetchCreneaux}
                       />
                     )
                   })}

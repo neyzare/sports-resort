@@ -29,6 +29,7 @@ type Props = {
   dateLong: string
   heure: string
   creneau?: Creneau
+  onUpdate?: () => void
 }
 
 const API_BASE = 'http://localhost:8080/api'
@@ -41,9 +42,11 @@ export default function ReservationPopUp({
   dateLong,
   heure,
   creneau,
+  onUpdate,
 }: Props) {
   const [open, setOpen]         = useState(false)
   const [sports, setSports]     = useState<Sport[]>([])
+  const [sportId, setSportId]   = useState<number | ''>('');
   const [coachs, setCoachs]     = useState<Coach[]>([])
   const [reservationType, setReservationType] =
     useState<'solo' | 'coach'>('solo')
@@ -55,21 +58,35 @@ export default function ReservationPopUp({
 
   useEffect(() => {
     if (!token) return
-    const headers = { Authorization: `Bearer ${token}` }
-
-    ;(async () => {
+    const headers = { Authorization: `Bearer ${token}` };
+    
+    (async () => {
       try {
-        const [s, c] = await Promise.all([
+        const [s] = await Promise.all([
           axios.get(`${API_BASE}/sports`, { headers }),
-          axios.get(`${API_BASE}/user/coachs`, { headers }),
         ])
         setSports(s.data)
-        setCoachs(c.data)
       } catch (err) {
-        console.error('Erreur fetch sports / coachs :', err)
+        console.error('Erreur fetch sports :', err)
       }
     })()
   }, [token])
+
+  useEffect(() => {
+    if (!token) return
+    const headers = { Authorization: `Bearer ${token}` };
+
+    (async () => {
+      try {
+        const [c] = await Promise.all([
+          axios.get(`${API_BASE}/user/coachs/sport/${sportId}`, { headers }),
+        ])
+        setCoachs(c.data)
+      } catch (err) {
+        console.error('Erreur fetch coachs :', err)
+      }
+    })()
+  }, [sportId])
 
   const emoji = creneau?.sport?.emojie
 
@@ -223,8 +240,22 @@ export default function ReservationPopUp({
     try {
       await axios.post(`${API_BASE}/creneaux`, data, { headers })
       setOpen(false)
+      onUpdate?.()
     } catch (err) {
       console.error('Erreur création résa :', err)
+    }
+  }
+
+  const handleCancelReservation = async () => {
+    if (!token || !creneau?.id) return;
+    const headers = { Authorization: `Bearer ${token}` };
+
+    try {
+      await axios.delete(`${API_BASE}/creneaux/${creneau.id}`, { headers });
+      setOpen(false);
+      onUpdate?.();
+    } catch (err) {
+      console.error('Erreur annulation résa :', err);
     }
   }
 
@@ -238,7 +269,133 @@ export default function ReservationPopUp({
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 sm:items-center sm:p-0">
             <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl sm:my-8 sm:w-full sm:max-w-lg">
-              <form onSubmit={handleSubmit}>
+              {status === 'FREE' ? (
+                <form onSubmit={handleSubmit}>
+                  <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div className="sm:flex sm:items-start">
+                      <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-light-white sm:mx-0 sm:size-10">
+                        <BarsArrowUpIcon
+                          aria-hidden="true"
+                          className="size-6 text-blue-secondary"
+                        />
+                      </div>
+                      <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                        <DialogTitle className="text-base font-semibold text-gray-900">
+                          Réserver un court
+                        </DialogTitle>
+
+                        <p className="mt-2 text-sm text-gray-500">
+                          {dateLong} à {heure}
+                        </p>
+
+                        <label className="block mt-4 text-xs font-bold text-gray-700">
+                          Choix du sport
+                        </label>
+                        <select
+                          name="sport"
+                          required
+                          className="border border-border rounded-border w-full py-2 px-3 mb-4"
+                          defaultValue=""
+                          onChange={(e) => {
+                            const id = Number(e.target.value);
+                            setSportId(id);
+                          }}
+                        >
+                          <option value="" disabled>
+                            Sélectionnez un sport
+                          </option>
+                          {sports.map((s) => (
+                            <option key={s.id} value={s.id}>
+                              {s.emojie} {s.name}
+                            </option>
+                          ))}
+                        </select>
+
+                        <fieldset className="mb-4">
+                          <legend className="block text-xs font-bold text-gray-700 mb-1">
+                            Type de réservation
+                          </legend>
+
+                          <div className="flex items-center mb-2">
+                            <input
+                              id={`solo-${index}`}
+                              type="radio"
+                              name="reservationType"
+                              value="solo"
+                              checked={reservationType === 'solo'}
+                              onChange={() => setReservationType('solo')}
+                              className="h-4 w-4 text-blue border-gray-300"
+                            />
+                            <label
+                              htmlFor={`solo-${index}`}
+                              className="ml-2 text-xs text-gray-700"
+                            >
+                              Solo
+                            </label>
+                          </div>
+
+                          <div className="flex items-center">
+                            <input
+                              id={`coach-${index}`}
+                              type="radio"
+                              name="reservationType"
+                              value="coach"
+                              checked={reservationType === 'coach'}
+                              onChange={() => setReservationType('coach')}
+                              className="h-4 w-4 text-blue border-gray-300"
+                            />
+                            <label
+                              htmlFor={`coach-${index}`}
+                              className="ml-2 text-xs text-gray-700"
+                            >
+                              Avec coach
+                            </label>
+                          </div>
+                        </fieldset>
+
+                        {reservationType === 'coach' && (
+                          <>
+                            <label className="block text-xs font-bold text-gray-700 mb-1">
+                              Choix du coach
+                            </label>
+                            <select
+                              name="coach"
+                              required
+                              className="border border-border rounded-border w-full py-2 px-3 mb-4"
+                              defaultValue=""
+                            >
+                              <option value="" disabled>
+                                Sélectionnez un coach
+                              </option>
+                              {coachs.map((c) => (
+                                <option key={c.id} value={c.id}>
+                                  {c.firstname}
+                                </option>
+                              ))}
+                            </select>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse">
+                    <button
+                      type="submit"
+                      className="bg-blue border-blue text-white border-2 rounded-full px-6 py-2 hover:bg-transparent hover:text-blue uppercase font-bold m-1 sm:w-auto text-xs"
+                    >
+                      Réserver
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setOpen(false)}
+                      className="border-blue text-blue border-2 rounded-full px-6 py-2 hover:bg-blue hover:text-white uppercase font-bold m-1 sm:w-auto text-xs"
+                    >
+                      Fermer
+                    </button>
+                  </div>
+                </form>
+              ) : (
                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                   <div className="sm:flex sm:items-start">
                     <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-light-white sm:mx-0 sm:size-10">
@@ -249,116 +406,56 @@ export default function ReservationPopUp({
                     </div>
                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                       <DialogTitle className="text-base font-semibold text-gray-900">
-                        Réserver un court
+                        Détail de la réservation
                       </DialogTitle>
-
                       <p className="mt-2 text-sm text-gray-500">
                         {dateLong} à {heure}
                       </p>
 
-                      <label className="block mt-4 text-xs font-bold text-gray-700">
-                        Choix du sport
-                      </label>
-                      <select
-                        name="sport"
-                        required
-                        className="border border-border rounded-border w-full py-2 px-3 mb-4"
-                        defaultValue=""
-                      >
-                        <option value="" disabled>
-                          Sélectionnez un sport
-                        </option>
-                        {sports.map((s) => (
-                          <option key={s.id} value={s.id}>
-                            {s.emojie} {s.name}
-                          </option>
-                        ))}
-                      </select>
+                      <div className="mt-4 text-sm text-gray-700 space-y-2">
+                        {creneau?.sport && (
+                          <div>
+                            <strong>Sport : </strong>
+                            {creneau.sport.emojie} {creneau.sport.name}
+                          </div>
+                        )}
 
-                      <fieldset className="mb-4">
-                        <legend className="block text-xs font-bold text-gray-700 mb-1">
-                          Type de réservation
-                        </legend>
+                        {creneau?.user && (
+                          <div>
+                            <strong>Utilisateur : </strong>
+                            {creneau.user.firstname} {creneau.user.lastname} (
+                            {creneau.user.email})
+                          </div>
+                        )}
 
-                        <div className="flex items-center mb-2">
-                          <input
-                            id={`solo-${index}`}
-                            type="radio"
-                            name="reservationType"
-                            value="solo"
-                            checked={reservationType === 'solo'}
-                            onChange={() => setReservationType('solo')}
-                            className="h-4 w-4 text-blue border-gray-300"
-                          />
-                          <label
-                            htmlFor={`solo-${index}`}
-                            className="ml-2 text-xs text-gray-700"
-                          >
-                            Solo
-                          </label>
-                        </div>
-
-                        <div className="flex items-center">
-                          <input
-                            id={`coach-${index}`}
-                            type="radio"
-                            name="reservationType"
-                            value="coach"
-                            checked={reservationType === 'coach'}
-                            onChange={() => setReservationType('coach')}
-                            className="h-4 w-4 text-blue border-gray-300"
-                          />
-                          <label
-                            htmlFor={`coach-${index}`}
-                            className="ml-2 text-xs text-gray-700"
-                          >
-                            Avec coach
-                          </label>
-                        </div>
-                      </fieldset>
-
-                      {reservationType === 'coach' && (
-                        <>
-                          <label className="block text-xs font-bold text-gray-700 mb-1">
-                            Choix du coach
-                          </label>
-                          <select
-                            name="coach"
-                            required
-                            className="border border-border rounded-border w-full py-2 px-3 mb-4"
-                            defaultValue=""
-                          >
-                            <option value="" disabled>
-                              Sélectionnez un coach
-                            </option>
-                            {coachs.map((c) => (
-                              <option key={c.id} value={c.id}>
-                                {c.firstname}
-                              </option>
-                            ))}
-                          </select>
-                        </>
-                      )}
+                        {creneau?.coach && (
+                          <div>
+                            <strong>Coach : </strong>
+                            {creneau.coach.firstname} {creneau.coach.lastname} (
+                            {creneau.coach.email})
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse">
-                  <button
-                    type="submit"
-                    className="bg-blue border-blue text-white border-2 rounded-full px-6 py-2 hover:bg-transparent hover:text-blue uppercase font-bold m-1 sm:w-auto text-xs"
-                  >
-                    Réserver
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setOpen(false)}
-                    className="border-blue text-blue border-2 rounded-full px-6 py-2 hover:bg-blue hover:text-white uppercase font-bold m-1 sm:w-auto text-xs"
-                  >
-                    Fermer
-                  </button>
+                  <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse">
+                    <button
+                      onClick={handleCancelReservation}
+                      className="bg-red border-red text-white border-2 rounded-full px-6 py-2 hover:bg-transparent hover:text-red-600 uppercase font-bold m-1 sm:w-auto text-xs"
+                    >
+                      Annuler la résa
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setOpen(false)}
+                      className="border-blue text-blue border-2 rounded-full px-6 py-2 hover:bg-blue hover:text-white uppercase font-bold m-1 sm:w-auto text-xs"
+                    >
+                      Fermer
+                    </button>
+                  </div>
                 </div>
-              </form>
+              )}
             </DialogPanel>
           </div>
         </div>

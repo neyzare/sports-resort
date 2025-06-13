@@ -58,4 +58,9 @@ public class CreneauxController {
     public void deleteCreneau(@PathVariable Long id) {
         creneauRepository.deleteById(id);
     }
+
+    @GetMapping("/{id}")
+    public Creneau getCreneauById(@PathVariable Long id) {
+        return creneauRepository.findById(id).orElseThrow(() -> new RuntimeException("Creneaux non trouvé"));
+    }
 }
