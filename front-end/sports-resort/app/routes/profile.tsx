@@ -12,6 +12,11 @@ interface User {
   lastname: string;
   email: string;
   roles: Role[];
+  country: string;
+  phonenumber: number;
+  dateofbirth: string;
+  city: string;
+  zipcode: number;
 }
 
 interface Role {
@@ -62,7 +67,7 @@ export default function Profile () {
             />
             <div className="text-center text-base space-y-2 md:text-start">
               <p>{user?.firstname} {user?.lastname}</p>
-              <p>France</p>
+              <p>{user?.country}</p>
               <p>{user?.roles?.[0]?.name ?? 'aucun rôle'}</p>
             </div>
           </div>
@@ -94,12 +99,12 @@ export default function Profile () {
 
             <div className="flex flex-col text-center">
               <p className="text-light-text">Date de naissance</p>
-              <p>19/19/1919</p>
+              <p>{user?.dateofbirth}</p>
             </div>
 
             <div className="flex flex-col text-center">
               <p className="text-light-text">Tél</p>
-              <p>0636303630</p>
+              <p>{user?.phonenumber}</p>
             </div>
 
             <div className="flex flex-col text-center">
@@ -119,17 +124,17 @@ export default function Profile () {
           <div className="grid grid-cols-2 gap-4 gap-x-8 md:grid-cols-3 place-items-center">
             <div className="flex flex-col text-center">
               <p className="text-light-text">Pays</p>
-              <p>France</p>
+              <p>{user?.country}</p>
             </div>
 
             <div className="flex flex-col text-center">
               <p className="text-light-text">Ville</p>
-              <p>Orléans</p>
+              <p>{user?.city}</p>
             </div>
 
             <div className="flex flex-col text-center">
               <p className="text-light-text">Code postal</p>
-              <p>45000</p>
+              <p>{user?.zipcode}</p>
             </div>
           </div>
         </div>
