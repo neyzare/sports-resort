@@ -30,7 +30,7 @@ public class UserController {
         return userRepository.findByEmail(email);
     }
 
-    @PutMapping("/users/{id}")
+    @PutMapping("/{id}")
     public User updateUser(@PathVariable Long id, @RequestBody User updated) {
         User user = userRepository.findById(id).orElseThrow();
         user.setFirstname(updated.getFirstname());
@@ -44,7 +44,7 @@ public class UserController {
         return userRepository.save(user);
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         userRepository.deleteById(id);
     }
